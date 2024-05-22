@@ -10,7 +10,7 @@ import {
 
 const submissionRouter = Router();
 
-submissionRouter.get('/', getSubmission);
+submissionRouter.get('/all', getSubmission);
 submissionRouter.get('/:id', getSubmissionById);
 submissionRouter.post('/', createSubmission);
 submissionRouter.put('/:id', updateSubmission);
