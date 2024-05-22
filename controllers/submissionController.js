@@ -22,7 +22,7 @@ const createSubmission = asyncHandler(async (req, res) => {
 
 	const newSubmission = await submissionModel.create(req.body)
 
-	res.status(200).send("Submission created successfully", newSubmission)
+	res.status(200).send("Submission created successfully")
 })
 
 const updateSubmission = asyncHandler(async (req, res) => {
@@ -44,17 +44,19 @@ const updateSubmission = asyncHandler(async (req, res) => {
 		}
 	)
 
-	res.status(200).send("Submission updated successfully", updatedSubmission)
+	res
+	.status(200)
+	.send(`Submission with id ${req.params.id} updated successfully`)
 })
 
 const deleteSubmission = asyncHandler(async (req, res) => {
-    const submission = await submissionModel.findById(req.params.id)
-    if (!submission) {
-        res.status(404).send("Submission not found")
-    }
+	const submission = await submissionModel.findById(req.params.id)
+	if (!submission) {
+		res.status(404).send("Submission not found")
+	}
 
-    await submissionModel.remove()
-	res.status(200).send(`Delete Submission with id ${req.params.id}`)
+	await submissionModel.findByIdAndDelete(req.params.id)
+	res.status(200).send(`Deleted submission with id ${req.params.id}`)
 })
 
 export {
