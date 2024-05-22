@@ -20,7 +20,7 @@ const createSubmission = asyncHandler(async (req, res) => {
 		res.status(400).send("No data provided")
 	}
 
-	const newSubmission = await submissionModel.create(req.body)
+	await submissionModel.create(req.body)
 
 	res.status(200).send("Submission created successfully")
 })

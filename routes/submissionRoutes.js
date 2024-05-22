@@ -13,7 +13,7 @@ const submissionRouter = Router();
 submissionRouter.get('/all', getSubmission);
 submissionRouter.get('/:id', getSubmissionById);
 submissionRouter.post('/', createSubmission);
-submissionRouter.put('/:id', updateSubmission);
+submissionRouter.patch('/:id', updateSubmission);
 submissionRouter.delete('/:id', deleteSubmission);
 
 export default submissionRouter;
