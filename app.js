@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 
-app.use('/api/submission', submissionRoutes);
+app.use('/api/submissions', submissionRoutes);
 
 app.use(errorHandler);
 

@@ -1,7 +1,7 @@
 import express from 'express';
 import { Router } from 'express';
 import {
-	getSubmission,
+	getAllSubmission,
 	getSubmissionById,
 	createSubmission,
 	updateSubmission,
@@ -10,7 +10,7 @@ import {
 
 const submissionRouter = Router();
 
-submissionRouter.get('/all', getSubmission);
+submissionRouter.get('', getAllSubmission);
 submissionRouter.get('/:id', getSubmissionById);
 submissionRouter.post('/', createSubmission);
 submissionRouter.patch('/:id', updateSubmission);

@@ -5,7 +5,7 @@ const isEmpty = (obj) => {
 	return JSON.stringify(obj) === "{}"
 }
 
-const getSubmission = asyncHandler(async (req, res) => {
+const getAllSubmission = asyncHandler(async (req, res) => {
 	const submissions = await submissionModel.find({})
 	res.status(200).send(submissions)
 })
@@ -60,7 +60,7 @@ const deleteSubmission = asyncHandler(async (req, res) => {
 })
 
 export {
-	getSubmission,
+	getAllSubmission,
 	getSubmissionById,
 	createSubmission,
 	updateSubmission,
