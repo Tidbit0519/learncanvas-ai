@@ -7,7 +7,7 @@ import errorHandler from './middleware/errorMIddleware.js';
 import submissionRoutes from './routes/submissionRoutes.js';
 
 dotenv.config();
-// connectDB();
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
