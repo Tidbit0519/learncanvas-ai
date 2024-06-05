@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler"
-import submissionModel from "../model/submissionModel.js"
+import submissionModel from "../model/Submission.js"
 
 const isEmpty = (obj) => {
 	return JSON.stringify(obj) === "{}"

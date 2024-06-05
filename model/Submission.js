@@ -1,7 +1,6 @@
-import { Int32, Timestamp } from "mongodb";
 import mongoose from "mongoose";
 
-const submissionSchema = mongoose.Schema({
+const Submission = mongoose.Schema({
     user_id: {
         type: Number,
         required: true
@@ -14,4 +13,4 @@ const submissionSchema = mongoose.Schema({
     timestamps: true
 });
 
-export default mongoose.model('Submission', submissionSchema);
+export default mongoose.model('Submission', Submission);
