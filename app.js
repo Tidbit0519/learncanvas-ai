@@ -6,12 +6,11 @@ import passportConfig from "./config/passportConfig.js";
 
 import connectDB from "./config/db.js";
 import errorHandler from "./middleware/errorMIddleware.js";
-import submisstionRouter from "./routes/submissionRoutes.js";
-import authRouter from "./routes/authRoutes.js";
+import { authRouter, submissionRouter } from "./routes/index.js";
 
 dotenv.config();
-passportConfig(passport);
 connectDB();
+passportConfig(passport);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,9 +23,9 @@ app.get("/testAPI", (req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use(
-	"/api",
+	"/api/submission",
 	passport.authenticate("jwt", { session: false }),
-	submisstionRouter
+	submissionRouter
 );
 
 app.use(errorHandler);

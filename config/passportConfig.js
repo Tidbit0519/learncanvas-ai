@@ -6,7 +6,7 @@ dotenv.config();
 
 const passportConfig = (passport) => {
 	const opts = {
-		jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
+		jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 		secretOrKey: process.env.JWT_SECRET,
 	};
 
@@ -21,6 +21,7 @@ const passportConfig = (passport) => {
 				return done(null, false);
 			} catch (error) {
 				console.error(error);
+				return done(error, false);
 			}
 		})
 	);

@@ -2,7 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import passportConfig from "../config/passportConfig.js";
 import jwt from "jsonwebtoken";
-import User from "../model/User.js";
+import { User } from "../model/index.js";
 
 passportConfig(passport);
 
@@ -46,7 +46,7 @@ authRouter.post("/login", async (req, res) => {
 					const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
 						expiresIn: "1d",
 					});
-					return res.status(200).json({ token: 'JWT ' + token });
+					return res.status(200).json({ token: 'Bearer ' + token });
 				} else {
 					return res.status(401).send("Invalid email or password");
 				}
