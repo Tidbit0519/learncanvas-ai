@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 
 import connectDB from './config/db.js';
 import errorHandler from './middleware/errorMIddleware.js';
-import submissionRoutes from './routes/submissionRoutes.js';
+import submisstionRouter from './routes/submissionRoutes.js';
+import authRouter from './routes/authRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -18,7 +19,8 @@ app.get('/testAPI', (req, res) => {
   res.status(200).send('API is working!');
 });
 
-app.use('/api/submissions', submissionRoutes);
+
+app.use('/api/submissions', submisstionRouter);
 
 app.use(errorHandler);
 
