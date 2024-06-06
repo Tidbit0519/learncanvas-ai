@@ -1,17 +1,26 @@
 import asyncHandler from "express-async-handler"
-import submissionModel from "../model/Submission.js"
+import Submission from "../model/Submission.js"
+import User from "../model/User.js"
 
 const isEmpty = (obj) => {
 	return JSON.stringify(obj) === "{}"
 }
 
+const testSubmission = asyncHandler(async (req, res) => {
+	const resObj = {
+		message: "Submission API is working!",
+		user: req.user,
+	}
+	res.status(200).send(resObj)
+});
+
 const getAllSubmission = asyncHandler(async (req, res) => {
-	const submissions = await submissionModel.find({})
+	const submissions = await Submission.find({})
 	res.status(200).send(submissions)
 })
 
 const getSubmissionById = asyncHandler(async (req, res) => {
-	const submission = await submissionModel.findById(req.params.id)
+	const submission = await Submission.findById(req.params.id)
 	res.status(200).send(submission)
 })
 
@@ -20,7 +29,7 @@ const createSubmission = asyncHandler(async (req, res) => {
 		res.status(400).send("No data provided")
 	}
 
-	await submissionModel.create(req.body)
+	await Submission.create(req.body)
 
 	res.status(200).send("Submission created successfully")
 })
@@ -30,12 +39,12 @@ const updateSubmission = asyncHandler(async (req, res) => {
 		res.status(400).send("No data provided")
 	}
 
-	const submission = await submissionModel.findById(req.params.id)
+	const submission = await Submission.findById(req.params.id)
 	if (!submission) {
 		res.status(404).send("Submission not found")
 	}
 
-	const updatedSubmission = await submissionModel.findByIdAndUpdate(
+	const updatedSubmission = await Submission.findByIdAndUpdate(
 		req.params.id,
 		req.body,
 		{
@@ -50,16 +59,17 @@ const updateSubmission = asyncHandler(async (req, res) => {
 })
 
 const deleteSubmission = asyncHandler(async (req, res) => {
-	const submission = await submissionModel.findById(req.params.id)
+	const submission = await Submission.findById(req.params.id)
 	if (!submission) {
 		res.status(404).send("Submission not found")
 	}
 
-	await submissionModel.findByIdAndDelete(req.params.id)
+	await Submission.findByIdAndDelete(req.params.id)
 	res.status(200).send(`Deleted submission with id ${req.params.id}`)
 })
 
 export {
+	testSubmission,
 	getAllSubmission,
 	getSubmissionById,
 	createSubmission,

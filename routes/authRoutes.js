@@ -1,7 +1,10 @@
 import { Router } from "express";
 import passport from "passport";
+import passportConfig from "../config/passportConfig.js";
 import jwt from "jsonwebtoken";
 import User from "../model/User.js";
+
+passportConfig(passport);
 
 const authRouter = Router();
 
@@ -41,9 +44,9 @@ authRouter.post("/login", async (req, res) => {
 				if (isMatch) {
 					const tokenObj = { id: user._id, email: user.email };
 					const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
-						expiresIn: "10s",
+						expiresIn: "1d",
 					});
-					return res.status(200).json({ token });
+					return res.status(200).json({ token: 'JWT ' + token });
 				} else {
 					return res.status(401).send("Invalid email or password");
 				}
