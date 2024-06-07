@@ -6,7 +6,7 @@ import passportConfig from "./config/passportConfig.js";
 
 import connectDB from "./config/db.js";
 import errorHandler from "./middleware/errorMIddleware.js";
-import { authRouter, submissionRouter } from "./routes/index.js";
+import { authRouter, submissionRouter, userRouter } from "./routes/index.js";
 
 dotenv.config();
 connectDB();
@@ -26,6 +26,11 @@ app.use(
 	"/api/submission",
 	passport.authenticate("jwt", { session: false }),
 	submissionRouter
+);
+app.use(
+	"/api/user",
+	passport.authenticate("jwt", { session: false }),
+	userRouter
 );
 
 app.use(errorHandler);

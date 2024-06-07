@@ -23,7 +23,7 @@ authRouter.post("/signup", async (req, res) => {
 		const newUser = await User.create({
 			email,
 			password,
-			role,
+			role: "user",
 		});
 		res.status(200).json({
 			message: "User created successfully",
