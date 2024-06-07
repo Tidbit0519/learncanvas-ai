@@ -9,10 +9,10 @@ passportConfig(passport);
 const authRouter = Router();
 
 authRouter.post("/signup", async (req, res) => {
-	if (!req.body.email || !req.body.password) {
+	if (!req.body.firstname || !req.body.lastname || !req.body.email || !req.body.password)  {
 		return res.status(400).send("All fields are required");
 	}
-	const { email, password, role } = req.body;
+	const { firstname, lastname, email, password, role } = req.body;
 
 	try {
 		const user = await User.findOne({ email: req.body.email });
@@ -21,6 +21,8 @@ authRouter.post("/signup", async (req, res) => {
 		}
 
 		const newUser = await User.create({
+			firstname,
+			lastname,
 			email,
 			password,
 			role: "user",
@@ -38,11 +40,11 @@ authRouter.post("/login", async (req, res) => {
 	try {
 		const user = await User.findOne({ email: req.body.email });
 		if (!user) {
-			return res.status(404).send("User not found");
+			return res.status(401).send("Invalid email or password");
 		} else {
 			user.comparePassword(req.body.password, (err, isMatch) => {
 				if (isMatch) {
-					const tokenObj = { id: user._id, roles: user.role };
+					const tokenObj = { id: user._id, role: user.role };
 					const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
 						expiresIn: "1d",
 					});

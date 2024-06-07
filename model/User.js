@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 const User = mongoose.Schema({
+    firstname: {
+        type: String,
+        required: true
+    },
+    lastname: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true
@@ -14,6 +22,10 @@ const User = mongoose.Schema({
         type: String,
         required: true
     },
+    lastActive: {
+        type: Date,
+        default: Date.now
+    }
 }, {
     timestamps: true
 });
@@ -35,6 +47,14 @@ User.methods.comparePassword = function (password, cb) {
         }
         cb(null, isMatch)
     })
+}
+
+User.methods.isAdmin = function () {
+    return this.role === "admin"
+}
+
+User.methods.idCheck = function (req) {
+    return this._id.toString() === req.params.id.toString()
 }
 
 export default mongoose.model('User', User);
