@@ -17,7 +17,11 @@ submissionRouter.get("/test", async (req, res) => {
 
 submissionRouter.get("/", async (req, res) => {
 	const submissions = await Submission.find({
-		user: req.user._id,
+		user: req.user._id
+	}).populate({
+		path: "user",
+		select: "email role",
+		model: User,
 	});
 	res.status(200).send(submissions);
 });

@@ -10,7 +10,7 @@ const User = mongoose.Schema({
         type: String,
         required: true
     },
-    roles: {
+    role: {
         type: String,
         required: true
     },

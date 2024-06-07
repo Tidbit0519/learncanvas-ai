@@ -1,7 +1,7 @@
-const ROLES = {
+const roles = {
     ADMIN: 'admin',
     MODERATOR: 'moderator',
     USER: 'user'
 };
 
-module.exports = ROLES;
+export default roles;

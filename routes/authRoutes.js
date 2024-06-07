@@ -12,7 +12,7 @@ authRouter.post("/signup", async (req, res) => {
 	if (!req.body.email || !req.body.password) {
 		return res.status(400).send("All fields are required");
 	}
-	const { email, password } = req.body;
+	const { email, password, role } = req.body;
 
 	try {
 		const user = await User.findOne({ email: req.body.email });
@@ -23,7 +23,7 @@ authRouter.post("/signup", async (req, res) => {
 		const newUser = await User.create({
 			email,
 			password,
-			roles: "user",
+			role,
 		});
 		res.status(200).json({
 			message: "User created successfully",
@@ -42,7 +42,7 @@ authRouter.post("/login", async (req, res) => {
 		} else {
 			user.comparePassword(req.body.password, (err, isMatch) => {
 				if (isMatch) {
-					const tokenObj = { id: user._id, email: user.email };
+					const tokenObj = { id: user._id, roles: user.role };
 					const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
 						expiresIn: "1d",
 					});
