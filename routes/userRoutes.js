@@ -16,7 +16,10 @@ const roleCheck = (req, res, next) => {
 };
 
 const idCheck = (req, res, next) => {
-	if (req.user._id.toString() !== req.params.id || req.user.role !== roles.ADMIN) {
+	if (
+		req.user._id.toString() !== req.params.id &&
+		req.user.role !== roles.ADMIN
+	) {
 		console.log(req.user._id.toString());
 		console.log(req.params.id);
 		return res.status(401).send("Unauthorized access");
@@ -33,37 +36,57 @@ userRouter.get("/", async (req, res) => {
 
 userRouter.get("/:id", async (req, res) => {
 	idCheck(req, res, async () => {
-		res.status(200).send(user);
-	});
-});
-
-userRouter.patch("/:id", async (req, res) => {
-	idCheck(req, res, async () => {
-		const { email, password, newPassword, role } = req.body;
 		const user = await User.findById(req.params.id);
 		if (!user) {
 			res.status(404).send("User not found");
 		}
 
-		if (password) {
-			user.comparePassword(password, (err, isMatch) => {
-				if (isMatch) {
-					user.email = email || user.email;
-					user.password = newPassword || user.password;
-					roleCheck(req, res, () => {
-						user.role = role || user.role;
-					});
-				} else {
-					res.status(403).send("Invalid password");
-				}
-			});
-		} else {
-			res.status(400).send("Please provide a password");
-		}
+		res.status(200).send(user);
 	});
+});
 
-	const updatedUser = await user.save();
-	res.status(200).send(updatedUser);
+userRouter.patch("/:id", async (req, res) => {
+	try {
+		const { oldPassword, newPassword } = req.query;
+		const { email, role } = req.body;
+		const user = await User.findById(req.params.id);
+
+		if (!user) {
+			return res.status(404).send("User not found");
+		}
+
+		// For Admins
+		if (req.user.role === roles.ADMIN) {
+			user.email = email || user.email;
+			user.role = role || user.role;
+			if (newPassword) {
+				user.password = newPassword;
+			}
+			await user.save();
+			return res.status(200).send(user);
+		}
+
+		// For Users
+		if (!oldPassword || !newPassword) {
+			return res
+				.status(403)
+				.send("Please provide both old and new passwords");
+		}
+
+		user.comparePassword(oldPassword, async (err, isMatch) => {
+			if (isMatch) {
+				user.email = email || user.email;
+				user.password = newPassword, 10;
+				await user.save();
+				return res.status(200).send(user);
+			} else {
+				return res.status(403).send("Invalid password");
+			}
+		});
+	} catch (error) {
+		console.error("Error updating user:", error);
+		res.status(500).send("Internal server error");
+	}
 });
 
 userRouter.delete("/:id", async (req, res) => {
@@ -73,7 +96,7 @@ userRouter.delete("/:id", async (req, res) => {
 			res.status(404).send("User not found");
 		}
 
-		await user.remove();
+		await User.findByIdAndDelete(req.params.id);
 		res.status(200).send("User deleted successfully");
 	});
 });
