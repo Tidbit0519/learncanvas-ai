@@ -1,4 +1,5 @@
 import { Router } from "express";
+import bcrypt from "bcrypt";
 import passport from "passport";
 import passportConfig from "../config/passportConfig.js";
 import roles from "../config/roles.js";
@@ -15,7 +16,7 @@ const roleCheck = (req, res, next) => {
 };
 
 const idCheck = (req, res, next) => {
-	if (req.user._id.toString() !== req.params.id) {
+	if (req.user._id.toString() !== req.params.id || req.user.role !== roles.ADMIN) {
 		return res.status(401).send("Unauthorized access");
 	}
 	next();
@@ -30,34 +31,37 @@ userRouter.get("/", async (req, res) => {
 
 userRouter.get("/:id", async (req, res) => {
 	idCheck(req, res, async () => {
-		const user = await User.findById(req.params.id);
-		if (!user) {
-			res.status(404).send("User not found");
-		}
-
 		res.status(200).send(user);
 	});
 });
 
 userRouter.patch("/:id", async (req, res) => {
 	idCheck(req, res, async () => {
-		const user = await User.findByIdAndUpdate(req.params.id);
-		res.status(200).send(user);
-	});
-});
-
-userRouter.patch("/:id", async (req, res) => {
-	rolesCheck(req, res, async () => {
+		const { email, password, newPassword, role } = req.body;
 		const user = await User.findById(req.params.id);
 		if (!user) {
 			res.status(404).send("User not found");
 		}
 
-		user.role = roles.ADMIN;
-
-		await user.save();
-		res.status(200).send(user);
+		if (password) {
+			user.comparePassword(password, (err, isMatch) => {
+				if (isMatch) {
+					user.email = email || user.email;
+					user.password = newPassword || user.password;
+					roleCheck(req, res, () => {
+						user.role = role || user.role;
+					});
+				} else {
+					res.status(403).send("Invalid password");
+				}
+			});
+		} else {
+			res.status(400).send("Please provide a password");
+		}
 	});
+
+	const updatedUser = await user.save();
+	res.status(200).send(updatedUser);
 });
 
 userRouter.delete("/:id", async (req, res) => {
