@@ -17,6 +17,8 @@ const roleCheck = (req, res, next) => {
 
 const idCheck = (req, res, next) => {
 	if (req.user._id.toString() !== req.params.id || req.user.role !== roles.ADMIN) {
+		console.log(req.user._id.toString());
+		console.log(req.params.id);
 		return res.status(401).send("Unauthorized access");
 	}
 	next();

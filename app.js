@@ -23,12 +23,12 @@ app.get("/testAPI", (req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use(
-	"/api/submission",
+	"/api/submissions",
 	passport.authenticate("jwt", { session: false }),
 	submissionRouter
 );
 app.use(
-	"/api/user",
+	"/api/users",
 	passport.authenticate("jwt", { session: false }),
 	userRouter
 );
