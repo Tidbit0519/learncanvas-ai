@@ -8,7 +8,7 @@ import { User } from "../model/index.js";
 passportConfig(passport);
 
 const userRouter = Router();
-const roleCheck = (req, res, next) => {
+const isAdmin = (req, res, next) => {
 	if (req.user.role !== roles.ADMIN) {
 		return res.status(401).send("Unauthorized access");
 	}
@@ -28,7 +28,7 @@ const idCheck = (req, res, next) => {
 };
 
 userRouter.get("/", async (req, res) => {
-	roleCheck(req, res, async () => {
+	isAdmin(req, res, async () => {
 		const users = await User.find();
 		res.status(200).send(users);
 	});
@@ -90,7 +90,7 @@ userRouter.patch("/:id", async (req, res) => {
 });
 
 userRouter.delete("/:id", async (req, res) => {
-	roleCheck(req, res, async () => {
+	isAdmin(req, res, async () => {
 		const user = await User.findById(req.params.id);
 		if (!user) {
 			res.status(404).send("User not found");

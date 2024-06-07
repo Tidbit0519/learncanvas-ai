@@ -3,6 +3,13 @@ import { Router } from "express";
 
 const submissionRouter = Router();
 
+const isAdmin = () => {
+	if (req.user.role !== "admin") {
+		return false;
+	}
+	return true;
+}
+
 submissionRouter.get("/test", async (req, res) => {
 	const resObj = {
 		message: "Submission API is working!",
@@ -12,6 +19,18 @@ submissionRouter.get("/test", async (req, res) => {
 });
 
 submissionRouter.get("/", async (req, res) => {
+	const { userId } = req.query;
+	if (userId && isAdmin()) {
+		const submissions = await Submission.find({
+			user: userId
+		}).populate({
+			path: "user",
+			select: "email role",
+			model: User,
+		});
+		return res.status(200).send(submissions);
+	}
+
 	const submissions = await Submission.find({
 		user: req.user._id
 	}).populate({
@@ -23,17 +42,37 @@ submissionRouter.get("/", async (req, res) => {
 });
 
 submissionRouter.get("/:id", async (req, res) => {
-	const submission = await Submission.findById(req.params.id);
-	if (!submission) {
-		res.status(404).send("Submission not found");
+	const { userId } = req.query;
+	if (userId && isAdmin()) {
+		const submission = await Submission.findById(req.params.id);
+		if (!submission) {
+			return res.status(404).send("Submission not found");
+		}
+		return res.status(200).send(submission);
 	}
 
+	const submission = await Submission.findById(req.params.id);
+	if (!submission){
+		return res.status(404).send("Submission not found");
+	} else if (submission.user.toString() !== req.user._id.toString()) {
+		return res.status(401).send("Unauthorized access");
+	}
 	res.status(200).send(submission);
 });
 
 submissionRouter.post("/", async (req, res) => {
 	if (isEmpty(req.body)) {
 		res.status(400).send("No data provided");
+	}
+
+	const { userId } = req.query;
+	if (userId && isAdmin()) {
+		const newSubmission = await Submission.create({
+			...req.body,
+			user: userId,
+		});
+
+		return res.status(200).send(newSubmission);
 	}
 
 	const newSubmission = await Submission.create({
@@ -46,12 +85,33 @@ submissionRouter.post("/", async (req, res) => {
 
 submissionRouter.patch("/:id", async (req, res) => {
 	if (isEmpty(req.body)) {
-		res.status(400).send("No data provided");
+		return res.status(400).send("No data provided");
+	}
+
+	const { userId } = req.query;
+	if (userId && isAdmin()) {
+		const submission = await Submission.findById(req.params.id);
+		if (!submission) {
+			return res.status(404).send("Submission not found");
+		}
+
+		const updatedSubmission = await Submission.findByIdAndUpdate(
+			req.params.id,
+			req.body,
+			{
+				new: true,
+				runValidators: true,
+			}
+		);
+
+		return res.status(200).send(updatedSubmission);
 	}
 
 	const submission = await Submission.findById(req.params.id);
 	if (!submission) {
-		res.status(404).send("Submission not found");
+		return res.status(404).send("Submission not found");
+	} else if (submission.user.toString() !== req.user._id.toString()) {
+		return res.status(401).send("Unauthorized access");
 	}
 
 	const updatedSubmission = await Submission.findByIdAndUpdate(
@@ -67,9 +127,22 @@ submissionRouter.patch("/:id", async (req, res) => {
 });
 
 submissionRouter.delete("/:id", async (req, res) => {
+	const { userId } = req.query;
+	if (userId && isAdmin()) {
+		const submission = await Submission.findById(req.params.id);
+		if (!submission) {
+			return res.status(404).send("Submission not found");
+		}
+	
+		await Submission.findByIdAndDelete(req.params.id);
+		return res.status(200).send(`Deleted submission with id ${req.params.id}`);
+	}
+
 	const submission = await Submission.findById(req.params.id);
 	if (!submission) {
-		res.status(404).send("Submission not found");
+		return res.status(404).send("Submission not found");
+	} else if (submission.user.toString() !== req.user._id.toString()) {
+		return res.status(401).send("Unauthorized access");
 	}
 
 	await Submission.findByIdAndDelete(req.params.id);
