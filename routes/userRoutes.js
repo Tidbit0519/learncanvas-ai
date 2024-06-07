@@ -1,88 +1,99 @@
 import { Router } from "express";
-import bcrypt from "bcrypt";
 import passport from "passport";
 import passportConfig from "../config/passportConfig.js";
-import roles from "../config/roles.js";
 import { User } from "../model/index.js";
 
 passportConfig(passport);
 
 const userRouter = Router();
-const isAdmin = (req, res, next) => {
-	if (req.user.role !== roles.ADMIN) {
-		return res.status(401).send("Unauthorized access");
-	}
-	next();
-};
-
-const idCheck = (req, res, next) => {
-	if (
-		req.user._id.toString() !== req.params.id &&
-		req.user.role !== roles.ADMIN
-	) {
-		console.log(req.user._id.toString());
-		console.log(req.params.id);
-		return res.status(401).send("Unauthorized access");
-	}
-	next();
-};
 
 userRouter.get("/", async (req, res) => {
-	isAdmin(req, res, async () => {
-		const users = await User.find();
-		res.status(200).send(users);
-	});
+	try {
+		const currentUser = await User.findById(req.user._id);
+		console.log(currentUser);
+		if (!currentUser.isAdmin()) {
+			return res.status(403).send("Unauthorized access");
+		}
+
+		const allUsers = await User.find({});
+		res.status(200).send(allUsers);
+	} catch (error) {
+		console.error("Error fetching users:", error);
+		res.status(500).send("Internal server error");
+	}
 });
 
 userRouter.get("/:id", async (req, res) => {
-	idCheck(req, res, async () => {
-		const user = await User.findById(req.params.id);
-		if (!user) {
-			res.status(404).send("User not found");
+	try {
+		const currentUser = await User.findById(req.user._id);
+
+		if (!currentUser.isAdmin() && !currentUser.idCheck(req)) {
+			return res.status(403).send("Unauthorized access");
 		}
 
-		res.status(200).send(user);
-	});
+		const getUser = await User.findById(req.params.id);
+		if (!getUser) {
+			return res.status(404).send("User not found");
+		}
+		res.status(200).send(getUser);
+	} catch (error) {
+		console.error("Error fetching user:", error);
+		res.status(500).send("Internal server error");
+	}
 });
 
 userRouter.patch("/:id", async (req, res) => {
 	try {
-		const { oldPassword, newPassword } = req.query;
-		const { email, role } = req.body;
-		const user = await User.findById(req.params.id);
+		const { currentPassword, newPassword } = req.query;
+		const { firstname, lastname, email, role } = req.body;
 
+		const currentUser = await User.findById(req.user._id);
+		// Check if user is admin or user is trying to update their own info
+		if (!currentUser.isAdmin() && !currentUser.idCheck(req)) {
+			return res.status(403).send("Unauthorized access");
+		}
+
+		const user = await User.findById(req.params.id);
 		if (!user) {
 			return res.status(404).send("User not found");
 		}
 
-		// For Admins
-		if (req.user.role === roles.ADMIN) {
-			user.email = email || user.email;
-			user.role = role || user.role;
+		// Check if user is trying to update email or password
+		if (email || (currentPassword && newPassword)) {
+			if (!currentUser.isAdmin()) {
+				if (!currentPassword) {
+					return res
+						.status(403)
+						.send(
+							"Please provide current password to update email"
+						);
+				}
+				user.comparePassword(currentPassword, async (err, isMatch) => {
+					if (!isMatch) {
+						return res.status(403).send("Invalid password");
+					}
+				});
+			}
+			if (email) {
+				user.email = email;
+			}
 			if (newPassword) {
 				user.password = newPassword;
 			}
+		} else {
+			if (firstname) {
+				user.firstname = firstname;
+			}
+			if (lastname) {
+				user.lastname = lastname;
+			}
+			if (role && currentUser.isAdmin()) {
+				user.role = role;
+			}
+
 			await user.save();
 			return res.status(200).send(user);
 		}
-
-		// For Users
-		if (!oldPassword || !newPassword) {
-			return res
-				.status(403)
-				.send("Please provide both old and new passwords");
-		}
-
-		user.comparePassword(oldPassword, async (err, isMatch) => {
-			if (isMatch) {
-				user.email = email || user.email;
-				user.password = newPassword, 10;
-				await user.save();
-				return res.status(200).send(user);
-			} else {
-				return res.status(403).send("Invalid password");
-			}
-		});
 	} catch (error) {
 		console.error("Error updating user:", error);
 		res.status(500).send("Internal server error");
@@ -90,15 +101,21 @@ userRouter.patch("/:id", async (req, res) => {
 });
 
 userRouter.delete("/:id", async (req, res) => {
-	isAdmin(req, res, async () => {
-		const user = await User.findById(req.params.id);
-		if (!user) {
-			res.status(404).send("User not found");
+	try {
+		const currentUser = await User.findById(req.user._id);
+		if (!currentUser.isAdmin()) {
+			return res.status(403).send("Unauthorized access");
 		}
 
-		await User.findByIdAndDelete(req.params.id);
-		res.status(200).send("User deleted successfully");
-	});
+		const user = await User.findByIdAndDelete(req.params.id);
+		if (!user) {
+			return res.status(404).send("User not found");
+		}
+		res.status(200).send("User deleted");
+	} catch (error) {
+		console.error("Error deleting user:", error);
+		res.status(500).send("Internal server error");
+	}
 });
 
 export default userRouter;
