@@ -3,21 +3,6 @@ import { Router } from "express";
 
 const submissionRouter = Router();
 
-const isAdmin = () => {
-	if (req.user.role !== "admin") {
-		return false;
-	}
-	return true;
-}
-
-submissionRouter.get("/test", async (req, res) => {
-	const resObj = {
-		message: "Submission API is working!",
-		user: req.user,
-	};
-	res.status(200).send(resObj);
-});
-
 submissionRouter.get("/", async (req, res) => {
 	const { userId } = req.query;
 	if (userId && isAdmin()) {
