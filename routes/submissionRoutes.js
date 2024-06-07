@@ -3,10 +3,6 @@ import { Router } from "express";
 
 const submissionRouter = Router();
 
-const isEmpty = (obj) => {
-	return JSON.stringify(obj) === "{}";
-};
-
 submissionRouter.get("/test", async (req, res) => {
 	const resObj = {
 		message: "Submission API is working!",
