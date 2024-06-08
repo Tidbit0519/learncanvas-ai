@@ -1,7 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import passportConfig from "../config/passportConfig.js";
-import { User } from "../model/index.js";
+import { User, Submission } from "../model/index.js";
 
 passportConfig(passport);
 
@@ -110,6 +110,8 @@ userRouter.delete("/:id", async (req, res) => {
 		if (!user) {
 			return res.status(404).send("User not found");
 		}
+
+		await Submission.deleteMany({ user: req.params.id });
 		res.status(200).send("User deleted");
 	} catch (error) {
 		console.error("Error deleting user:", error);
