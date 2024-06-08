@@ -10,7 +10,6 @@ const userRouter = Router();
 userRouter.get("/", async (req, res) => {
 	try {
 		const currentUser = await User.findById(req.user._id);
-		console.log(currentUser);
 		if (!currentUser.isAdmin()) {
 			return res.status(403).send("Unauthorized access");
 		}
