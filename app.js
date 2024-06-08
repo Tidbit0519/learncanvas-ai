@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 
-app.get("/testAPI", (req, res) => {
+app.get("/ping", (req, res) => {
 	res.status(200).send("API is working!");
 });
 
