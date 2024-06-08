@@ -79,20 +79,20 @@ userRouter.patch("/:id", async (req, res) => {
 			if (newPassword) {
 				user.password = newPassword;
 			}
-		} else {
-			if (firstname) {
-				user.firstname = firstname;
-			}
-			if (lastname) {
-				user.lastname = lastname;
-			}
-			if (role && currentUser.isAdmin()) {
-				user.role = role;
-			}
-
-			await user.save();
-			return res.status(200).send(user);
 		}
+		
+		if (firstname) {
+			user.firstname = firstname;
+		}
+		if (lastname) {
+			user.lastname = lastname;
+		}
+		if (role && currentUser.isAdmin()) {
+			user.role = role;
+		}
+
+		await user.save();
+		return res.status(200).send(user);
 	} catch (error) {
 		console.error("Error updating user:", error);
 		res.status(500).send("Internal server error");

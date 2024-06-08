@@ -22,6 +22,10 @@ const User = mongoose.Schema({
         type: String,
         required: true
     },
+    submissions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Submission'
+    }],
     lastActive: {
         type: Date,
         default: Date.now

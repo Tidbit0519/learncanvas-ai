@@ -74,6 +74,10 @@ submissionRouter.post("/", async (req, res) => {
 		user: req.user._id,
 	});
 
+	const user = await User.findById(req.user._id);
+	user.submissions.push(newSubmission);
+	await user.save();
+
 	res.status(200).send(newSubmission);
 });
 
@@ -132,18 +136,10 @@ submissionRouter.patch("/:id", async (req, res) => {
 });
 
 submissionRouter.delete("/:id", async (req, res) => {
-	const { userId } = req.query;
-
-	if (userId && !currentUser.isAdmin()) {
-		return res.status(403).send("Unauthorized access");
-	}
+	const currentUser = await User.findById(req.user._id);
 
 	// If userId is provided and user is admin, delete submission for that user
-	if (userId && isAdmin()) {
-		if (!Submission.find({ user: userId })) {
-			return res.status(404).send("User not found");
-		}
-
+	if (currentUser.isAdmin()) {
 		const submission = await Submission.findById(req.params.id);
 		if (!submission) {
 			return res.status(404).send("Submission not found");
