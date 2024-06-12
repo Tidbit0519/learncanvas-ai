@@ -12,7 +12,7 @@ authRouter.post("/signup", async (req, res) => {
 	if (!req.body.firstname || !req.body.lastname || !req.body.email || !req.body.password)  {
 		return res.status(400).send("All fields are required");
 	}
-	const { firstname, lastname, email, password, role } = req.body;
+	const { firstname, lastname, email, password, canvasToken, role } = req.body;
 
 	try {
 		const user = await User.findOne({ email: req.body.email });
@@ -25,6 +25,7 @@ authRouter.post("/signup", async (req, res) => {
 			lastname,
 			email,
 			password,
+			canvasToken,
 			role: "user",
 		});
 		res.status(200).json({
@@ -48,6 +49,14 @@ authRouter.post("/login", async (req, res) => {
 					const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
 						expiresIn: "1d",
 					});
+
+					res.cookie("jwt", token, {
+						httpOnly: true,
+						sameSite: "none",
+						secure: process.env.NODE_ENV === "production",
+						maxAge: 24 * 60 * 60 * 1000,
+					});
+
 					return res.status(200).json({ token: 'Bearer ' + token });
 				} else {
 					return res.status(401).send("Invalid email or password");
