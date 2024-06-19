@@ -4,10 +4,11 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import passport from "passport";
 import passportConfig from "./config/passportConfig.js";
+import cookieParser from "cookie-parser";
 
 import connectDB from "./config/db.js";
 import errorHandler from "./middleware/errorMIddleware.js";
-import { authRouter, submissionRouter, userRouter } from "./routes/index.js";
+import { authRouter, submissionRouter, userRouter, feedbackRouter } from "./routes/index.js";
 
 dotenv.config();
 connectDB();
@@ -16,8 +17,14 @@ passportConfig(passport);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+const corsOptions = {
+	origin: "http://127.0.0.1:5173",
+	credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.get("/ping", (req, res) => {
 	res.status(200).send("API is working!");
@@ -34,6 +41,7 @@ app.use(
 	passport.authenticate("jwt", { session: false }),
 	userRouter
 );
+app.use("/api/feedback", feedbackRouter);
 
 app.use(errorHandler);
 
