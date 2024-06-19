@@ -18,10 +18,6 @@ const User = mongoose.Schema({
         type: String,
         required: true
     },
-    canvasToken: {
-        type: String,
-        required: true
-    },
     role: {
         type: String,
         required: true
@@ -34,7 +30,9 @@ const User = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    refreshToken: [String]
+    refreshToken: {
+        type: String
+    },
 }, {
     timestamps: true
 });
