@@ -31,7 +31,6 @@ submissionRouter.get("/:id", async (req, res) => {
 
 	// If user is admin, return submission regardless of user
 	const submission = await Submission.findById(req.params.id);
-	console.log(submission.user.toString(), req.user._id.toString());
 	if (!submission) {
 		return res.status(404).send("Submission not found");
 	} else if (
