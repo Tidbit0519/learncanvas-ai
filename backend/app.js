@@ -7,7 +7,7 @@ import passportConfig from "./config/passportConfig.js";
 import cookieParser from "cookie-parser";
 
 import connectDB from "./config/db.js";
-import errorHandler from "./middleware/errorMIddleware.js";
+import errorHandler from "./middleware/errorMiddleware.js";
 import { authRouter, submissionRouter, userRouter, feedbackRouter } from "./routes/index.js";
 
 dotenv.config();
