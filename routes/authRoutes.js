@@ -59,8 +59,9 @@ authRouter.post("/login", async (req, res) => {
 					firstname: foundUser.firstname,
 					role: foundUser.role,
 				};
+
 				const accessToken = jwt.sign(tokenObj, process.env.JWT_SECRET, {
-					expiresIn: "5m",
+					expiresIn: "15s",
 				});
 
 				const refreshToken = jwt.sign(
