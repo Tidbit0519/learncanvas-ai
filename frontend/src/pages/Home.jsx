@@ -4,7 +4,7 @@ import useSubmissionApi from "../features/submissions/useSubmissionApi";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../features/auth/authSlice";
 import { styles } from "../utils/styles";
-import Submission from "../components/Submission";
+import Submission from "../components/SubmissionCard";
 
 const Home = () => {
 	const token = useSelector(selectCurrentToken);

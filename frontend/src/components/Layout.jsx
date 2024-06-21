@@ -135,7 +135,7 @@ const Layout = () => {
 					</DialogPanel>
 				</Dialog>
 			</header>
-			<div className="max-w-screen-xl mx-auto">
+			<div className="max-w-screen-lg mx-auto">
 				<Outlet />
 			</div>
 		</>
