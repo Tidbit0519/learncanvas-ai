@@ -13,11 +13,11 @@ const Layout = () => {
 
 	return (
 		<>
-			<header className="bg-slate-900">
-				<nav className="flex max-w-7xl items-center justify-between px-8 py-2">
+			<header className="bg-slate-800">
+				<nav className="flex items-center justify-between px-8 py-2">
 					<div className="flex lg:flex-1 items-center">
 						<a
-							href="#"
+							href="/"
 							className="-m-1.5 p-1.5"
 						>
 							<img
@@ -27,8 +27,8 @@ const Layout = () => {
 							/>
 						</a>
 						<a
-							href="#"
-							className="text-sm font-bold text-gray-100 font- uppercase"
+							href="/"
+							className="text-sm font-bold text-gray-100 uppercase"
 						>
 							Canvas Feeder
 						</a>
@@ -40,7 +40,10 @@ const Layout = () => {
 							onClick={() => setMobileMenuOpen(true)}
 						>
 							<span className="sr-only">Open main menu</span>
-							<Bars3Icon className="h-6 w-6" />
+							<Bars3Icon
+								className="h-6 w-6"
+								color="#fff"
+							/>
 						</button>
 					</div>
 					<PopoverGroup className="hidden lg:flex lg:gap-x-24">
@@ -59,7 +62,7 @@ const Layout = () => {
 					</PopoverGroup>
 					<div className="hidden lg:flex lg:flex-1 lg:justify-end">
 						<a
-							href="#"
+							href="/login"
 							className="text-sm font-semibold leading-6 text-gray-100"
 						>
 							Log Out <span aria-hidden="true">&rarr;</span>
@@ -121,10 +124,10 @@ const Layout = () => {
 								</div>
 								<div className="py-6">
 									<a
-										href="#"
+										href="/login"
 										className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
 									>
-										Log in
+										Log Out
 									</a>
 								</div>
 							</div>
@@ -132,7 +135,9 @@ const Layout = () => {
 					</DialogPanel>
 				</Dialog>
 			</header>
-			<Outlet />
+			<div className="max-w-screen-xl mx-auto">
+				<Outlet />
+			</div>
 		</>
 	);
 };
