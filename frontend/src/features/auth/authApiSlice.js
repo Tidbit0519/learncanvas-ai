@@ -28,7 +28,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
 					const { data } = await queryFulfilled;
 					const { id, firstname, token } = data;
 					dispatch(setCredentials({ id: id, firstname: firstname, token: token }));
-					console.log("Refreshed token, new token: ", token);
 				} catch (err) {
 					console.log(err);
 				}
