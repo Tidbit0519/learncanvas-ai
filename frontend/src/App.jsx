@@ -10,7 +10,6 @@ import Home from "./pages/Home";
 import Submissions from "./pages/Submissions";
 import SubmissionById from "./pages/SubmissionById";
 
-
 import RequireAuth from "./features/auth/RequireAuth";
 import PersistLogin from "./features/auth/PersistLogin";
 
@@ -46,14 +45,13 @@ function App() {
 							element={<Home />}
 						/>
 						<Route
-							path="/submissions"
+							path="submissions"
 							element={<Submissions />}
-						>
-							<Route
-								path="/submissions/:submissionId"
-								element={<SubmissionById />}
-							/>
-						</Route>
+						/>
+						<Route
+							path="submissions/:submissionId"
+							element={<SubmissionById />}
+						/>
 					</Route>
 				</Route>
 			</Route>

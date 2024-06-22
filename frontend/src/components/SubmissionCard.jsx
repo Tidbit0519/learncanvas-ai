@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
 import { Button } from "@headlessui/react";
 import { EyeIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SubmissionCard = ({ submission }) => {
-	const navigate = useNavigate();
 
 	return (
 		<div className="flex flex-col gap-y-2 bg-slate-800 p-6 rounded-2xl h-auto tracking-wide">
@@ -12,14 +11,11 @@ const SubmissionCard = ({ submission }) => {
 			<p>Summary: {submission.content_summary}</p>
 			<p>Last Updated: {submission.updatedAt}</p>
 			<div className="flex justify-end gap-2 pt-2">
-				<Button
+				<Link
 					className="p-2 bg-slate-800 rounded-2xl text-white hover:bg-slate-900"
-					onClick={() => {
-						navigate(`/submissions/${submission._id}`);
-					}}
-				>
+					to={`/submissions/${submission._id}`}>
 					<EyeIcon className="h-4 w-4" />
-				</Button>
+				</Link>
 				<Button
 					className="p-2 bg-slate-800 rounded-2xl text-white hover:bg-slate-900"
 					onClick={() => {

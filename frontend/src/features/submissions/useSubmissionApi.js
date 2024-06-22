@@ -10,6 +10,7 @@ const useSubmissionApi = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [submissions, setSubmissions] = useState([]);
+    const [submission, setSubmission] = useState(null);
 
     const getAllSubmissions = async () => {
         try {
@@ -28,11 +29,34 @@ const useSubmissionApi = () => {
         }
     };
 
+    const getSubmissionById = async (submissionId) => {
+        try {
+            setLoading(true);
+            const response = await axios.get(
+                `${baseUrl}/submissions/${submissionId}`,
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            );
+            console.log(response.data)
+            setSubmission(response.data);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            setError(err);
+            console.error(err);
+        }
+    }
+
     return {
         loading,
         error,
+        submission,
         submissions,
         getAllSubmissions,
+        getSubmissionById,
     };
 };
 

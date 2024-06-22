@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import {
 	Dialog,
 	DialogPanel,
@@ -47,12 +47,12 @@ const Layout = () => {
 						</button>
 					</div>
 					<PopoverGroup className="hidden lg:flex lg:gap-x-24">
-						<a
-							href="#"
-							className="text-sm font-semibold leading-6 text-gray-100"
-						>
-							Submissions
-						</a>
+                        <Link
+                            to="/submissions"
+                            className="text-sm font-semibold leading-6 text-gray-100"
+                        >
+                            Submissions
+                        </Link>
 						<a
 							href="#"
 							className="text-sm font-semibold leading-6 text-gray-100"
