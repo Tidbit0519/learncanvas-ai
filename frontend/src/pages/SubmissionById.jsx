@@ -30,7 +30,7 @@ const SubmissionById = () => {
 					<p>Last Updated: {submission.updatedAt}</p>
 					<div className="flex gap-2 pt-2">
 						<Button
-							className="p-2 bg-slate-800 rounded-2xl text-white hover:bg-slate-900"
+							className="p-2 bg-slate-800 rounded-2xl text-slate-100 hover:bg-slate-900"
 							onClick={() => {
 								console.log("Edit Submission");
 							}}
@@ -38,7 +38,7 @@ const SubmissionById = () => {
 							<PencilSquareIcon className="h-4 w-4" />
 						</Button>
 						<Button
-							className="p-2 bg-red-600 rounded-2xl text-white hover:bg-red-700"
+							className="p-2 bg-red-600 rounded-2xl text-slate-100 hover:bg-red-700"
 							onClick={() => {
 								console.log("Delete Submission");
 							}}
