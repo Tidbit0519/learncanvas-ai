@@ -2,10 +2,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../features/auth/authSlice";
 import useSubmissionApi from "../features/submissions/useSubmissionApi";
-
-import {
-	Button,
-} from "@headlessui/react";
 import { styles } from "../utils/styles";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Submission from "../components/SubmissionCard";
@@ -42,7 +38,7 @@ const Submissions = () => {
 								Your Submissions
 							</h2>
 							<div className="flex items-center lg:justify-end sm:justify-center">
-								<Button
+								<button
 									className="p-2 px-4 bg-violet-700 rounded-xl text-slate-100 hover:bg-violet-800 tracking-wider max-w-[300px]"
 									onClick={() => {
 										setIsOpen(true);
@@ -52,7 +48,7 @@ const Submissions = () => {
 										<PlusIcon className="h-4 w-4 stroke-2" />
 										Create New Submission
 									</div>
-								</Button>
+								</button>
 							</div>
 							<div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-4">
 								{submissions.length > 0 ? (
