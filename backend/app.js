@@ -8,7 +8,13 @@ import cookieParser from "cookie-parser";
 
 import connectDB from "./config/db.js";
 import errorHandler from "./middleware/errorMiddleware.js";
-import { authRouter, submissionRouter, userRouter, feedbackRouter } from "./routes/index.js";
+import {
+	authRouter,
+	canvasRouter,
+	submissionRouter,
+	userRouter,
+	feedbackRouter,
+} from "./routes/index.js";
 
 dotenv.config();
 connectDB();
@@ -31,6 +37,11 @@ app.get("/ping", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use(
+	"/api/canvas",
+	passport.authenticate("jwt", { session: false }),
+	canvasRouter
+);
 app.use(
 	"/api/submissions",
 	passport.authenticate("jwt", { session: false }),
