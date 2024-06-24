@@ -48,6 +48,27 @@ const useSubmissionApi = () => {
             setError(err);
             console.error(err);
         }
+    };
+
+    const createSubmission = async (submissionData) => {
+        try {
+            setLoading(true);
+            const response = await axios.post(
+                `${baseUrl}/submissions`,
+                submissionData,
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            );
+            setSubmission(response.data);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            setError(err);
+            console.error(err);
+        }
     }
 
     return {
@@ -57,6 +78,7 @@ const useSubmissionApi = () => {
         submissions,
         getAllSubmissions,
         getSubmissionById,
+        createSubmission,
     };
 };
 
