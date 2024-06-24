@@ -10,7 +10,7 @@ const SubmissionCard = ({ submission }) => {
 			<p className="text-slate-500">ID: {submission._id}</p>
 			<p>Summary: {submission.content_summary}</p>
 			<p>Last Updated: {submission.updatedAt}</p>
-			<div className="flex justify-end gap-2 pt-2">
+			<div className="flex justify-end gap-2 pt-2 mt-auto">
 				<Link
 					className="p-2 bg-slate-800 rounded-2xl text-white hover:bg-slate-900"
 					to={`/submissions/${submission._id}`}>
