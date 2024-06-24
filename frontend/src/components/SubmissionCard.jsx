@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { Button } from "@headlessui/react";
 import { EyeIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
@@ -16,22 +15,22 @@ const SubmissionCard = ({ submission }) => {
 					to={`/submissions/${submission._id}`}>
 					<EyeIcon className="h-4 w-4" />
 				</Link>
-				<Button
+				<button
 					className="p-2 bg-slate-800 rounded-2xl text-white hover:bg-slate-900"
 					onClick={() => {
 						console.log("Edit Submission");
 					}}
 				>
 					<PencilSquareIcon className="h-4 w-4" />
-				</Button>
-				<Button
+				</button>
+				<button
 					className="p-2 bg-red-600 rounded-2xl text-white hover:bg-red-700"
 					onClick={() => {
 						console.log("Delete Submission");
 					}}
 				>
 					<TrashIcon className="h-4 w-4" />
-				</Button>
+				</button>
 			</div>
 		</div>
 	);

@@ -1,0 +1,34 @@
+import { useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { selectCurrentToken } from "../auth/authSlice";
+
+const baseUrl = import.meta.env.VITE_API_URL;
+
+const useCanvasApi = () => {
+	const token = useSelector(selectCurrentToken);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
+	const [activeCourses, setActiveCourses] = useState([]);
+
+	const getAllActiveCourses = async () => {
+		try {
+			setLoading(true);
+			const response = await axios.get(`${baseUrl}/canvas/active`, {
+				headers: {
+					Authorization: token,
+				},
+			});
+			setActiveCourses(response.data);
+			setLoading(false);
+		} catch (err) {
+			setLoading(false);
+			setError(err);
+			console.error(err);
+		}
+	};
+
+	return { loading, error, activeCourses, getAllActiveCourses };
+};
+
+export default useCanvasApi;
