@@ -7,7 +7,7 @@ const CanvasCourseCard = ({ course }) => {
     return (
         <Ripples>
 		<div
-			className="flex flex-col gap-y-2 bg-slate-800 p-6 rounded-2xl h-auto tracking-wider hover:shadow-2xl active:shadow-none active:translate-y-1 transition-shadow duration-300 ease-in-out cursor-pointer"
+			className="flex flex-col gap-y-2 bg-slate-800 p-6 rounded-2xl h-auto tracking-wider hover:shadow-2xl active:shadow-none active:translate-y-0.5 transition-shadow duration-300 ease-in-out cursor-pointer"
 			role="button"
 			tabIndex={0}
 			onClick={() => {
