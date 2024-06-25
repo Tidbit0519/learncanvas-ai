@@ -4,8 +4,6 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import SubmissionForm from "./SubmissionForm";
 
 const SubmissionDialog = ({ isOpen, setIsOpen }) => {
-    console.log(isOpen);
-
 	return (
 		<Dialog
 			open={isOpen}
