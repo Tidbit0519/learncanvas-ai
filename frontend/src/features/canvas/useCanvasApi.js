@@ -10,15 +10,20 @@ const useCanvasApi = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const [activeCourses, setActiveCourses] = useState([]);
+	const [assignments, setAssignments] = useState([]);
 
 	const getAllActiveCourses = async () => {
 		try {
+			setError(null);
 			setLoading(true);
-			const response = await axios.get(`${baseUrl}/canvas/active`, {
-				headers: {
-					Authorization: token,
-				},
-			});
+			const response = await axios.get(
+				`${baseUrl}/canvas/activeCourses`,
+				{
+					headers: {
+						Authorization: token,
+					},
+				}
+			);
 			setActiveCourses(response.data);
 			setLoading(false);
 		} catch (err) {
@@ -28,7 +33,35 @@ const useCanvasApi = () => {
 		}
 	};
 
-	return { loading, error, activeCourses, getAllActiveCourses };
+	const getAllAssignments = async (courseId) => {
+		try {
+			setError(null);
+			setLoading(true);
+			const response = await axios.get(
+				`${baseUrl}/canvas/assignments/${courseId}`,
+				{
+					headers: {
+						Authorization: token,
+					},
+				}
+			);
+			setAssignments(response.data);
+			setLoading(false);
+		} catch (err) {
+			setLoading(false);
+			setError(err);
+			console.error(err);
+		}
+	};
+
+	return {
+		loading,
+		error,
+		activeCourses,
+		assignments,
+		getAllActiveCourses,
+		getAllAssignments,
+	};
 };
 
 export default useCanvasApi;
