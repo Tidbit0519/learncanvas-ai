@@ -1,4 +1,4 @@
-import  { useEffect } from "react";
+import { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 import { styles } from "../utils/styles";
 import useCanvasApi from "../features/canvas/useCanvasApi";
@@ -6,7 +6,8 @@ import CanvasCourseCard from "../components/CanvasCourseCard";
 
 const Home = () => {
 	const { firstname } = useAuth();
-	const { loading, error, activeCourses, getAllActiveCourses } = useCanvasApi();
+	const { loading, error, activeCourses, getAllActiveCourses } =
+		useCanvasApi();
 
 	useEffect(() => {
 		getAllActiveCourses();
@@ -32,9 +33,12 @@ const Home = () => {
 					<p>Loading active courses...</p>
 				) : (
 					<div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-4">
-						{activeCourses.length > 0 ? (
+						{activeCourses.length !== 0 ? (
 							activeCourses.map((course) => (
-								<CanvasCourseCard key={course.id} course={course} />
+								<CanvasCourseCard
+									key={course.id}
+									course={course}
+								/>
 							))
 						) : (
 							<p>No active courses found.</p>

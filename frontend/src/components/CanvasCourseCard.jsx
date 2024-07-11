@@ -2,19 +2,17 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { styles } from "../utils/styles";
-import Ripples from "react-ripples";
 
 const CanvasCourseCard = ({ course }) => {
 	const navigate = useNavigate();
 
-    return (
-        <Ripples>
+	return (
 		<div
 			className="flex flex-col gap-y-2 bg-slate-800 p-6 rounded-2xl h-auto tracking-wider hover:shadow-2xl active:shadow-none active:translate-y-0.5 transition-shadow duration-300 ease-in-out cursor-pointer"
 			role="button"
 			tabIndex={0}
 			onClick={() => {
-				navigate(`/assignments/${course.id}`);
+				navigate(`courses/${course.id}/assignments`);
 			}}
 		>
 			<div className="flex flex-col justify-between">
@@ -28,8 +26,7 @@ const CanvasCourseCard = ({ course }) => {
 					</button>
 				</div>
 			</div>
-            </div>
-        </Ripples>
+		</div>
 	);
 };
 

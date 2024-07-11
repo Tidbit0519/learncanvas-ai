@@ -29,9 +29,12 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use(bodyParser.text({ type: "text/plain" }));
+app.use("/api/feedback", feedbackRouter);
+
+app.use(bodyParser.json());
 app.get("/ping", (req, res) => {
 	res.status(200).send("API is working!");
 });
@@ -52,7 +55,6 @@ app.use(
 	passport.authenticate("jwt", { session: false }),
 	userRouter
 );
-app.use("/api/feedback", feedbackRouter);
 
 app.use(errorHandler);
 

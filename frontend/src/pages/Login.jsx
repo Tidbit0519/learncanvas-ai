@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/auth/authSlice";
@@ -6,8 +6,8 @@ import { useLoginMutation } from "../features/auth/authApiSlice";
 import usePersist from "../hooks/usePersist";
 
 const Login = () => {
-	const [user, setUser] = useState("");
-	const [pwd, setPwd] = useState("");
+	const emailRef = useRef(null);
+	const pwdRef = useRef(null);
 	const [errMsg, setErrMsg] = useState("");
 	const [persist, setPersist] = usePersist();
 
@@ -24,18 +24,14 @@ const Login = () => {
 		localStorage.setItem("persist", persist);
 	}, [persist]);
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+		const email = emailRef.current.value;
+		const password = pwdRef.current.value;
 
 		try {
-			const result = await login({
-				email: user,
-				password: pwd,
-			}).unwrap();
+			const result = await login({ email, password }).unwrap();
 			dispatch(setCredentials({ id: result.id, token: result.token }));
-			setUser("");
-			setPwd("");
-			setErrMsg("");
 			navigate("/");
 		} catch (err) {
 			if (err.status === 500) {
@@ -44,14 +40,6 @@ const Login = () => {
 				setErrMsg("Invalid user or password.");
 			}
 		}
-	};
-
-	const handleuserInput = (e) => {
-		setUser(e.target.value);
-	};
-
-	const handlePwdInput = (e) => {
-		setPwd(e.target.value);
 	};
 
 	const handleRegister = () => {
@@ -87,8 +75,7 @@ const Login = () => {
 							type="text"
 							id="email"
 							name="email"
-							value={user}
-							onChange={handleuserInput}
+							ref={emailRef}
 							required
 							className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
 						/>
@@ -104,8 +91,7 @@ const Login = () => {
 							type="password"
 							id="pwd"
 							name="pwd"
-							value={pwd}
-							onChange={handlePwdInput}
+							ref={pwdRef}
 							required
 							className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
 						/>
@@ -114,7 +100,6 @@ const Login = () => {
 						<button
 							type="submit"
 							className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-md font-medium text-slate-100 bg-violet-700 hover:bg-violet-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-							onSubmit={handleSubmit}
 						>
 							Sign in
 						</button>

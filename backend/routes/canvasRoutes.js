@@ -8,7 +8,8 @@ const token = "Bearer " + process.env.CANVAS_ACCESS_TOKEN;
 canvasRouter.get("/activeCourses", async (req, res) => {
 	try {
 		const response = await axios.get(
-			`${baseUrl}/courses?per_page=100&enrollment_state=active`,
+			// `${baseUrl}/courses?per_page=100&enrollment_state=active`,
+			`${baseUrl}/courses?per_page=1`,
 			{
 				headers: {
 					Authorization: token,
