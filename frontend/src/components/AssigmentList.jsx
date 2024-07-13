@@ -26,12 +26,23 @@ const AssignmentList = ({ assignments, setTutorAssignment }) => {
 							: "bg-slate-800"
 					}`}
 					onMouseDown={() => {
+						console.log(assignment);
 						handleAssignmentClick(assignment.id);
 						setTutorAssignment(assignment);
 					}}
 				>
-					<div className="truncate">
+					<div className="flex flex-col gap-2">
 						<p>{assignment.name}</p>
+						<div className="flex gap-2">
+							{assignment.submission_types.map((type) => (
+								<div
+									key={type}
+									className="text-xs p-2 bg-slate-600 text-slate-100 rounded-md"
+								>
+									<p>{type.replaceAll(/_/g, " ")}</p>
+								</div>
+							))}
+						</div>
 					</div>
 				</div>
 			))}
