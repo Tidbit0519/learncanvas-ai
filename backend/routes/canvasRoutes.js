@@ -23,7 +23,7 @@ canvasRouter.get("/activeCourses", async (req, res) => {
 	}
 });
 
-canvasRouter.get("/assignments/:courseId", async (req, res) => {
+canvasRouter.get("/:courseId/assignments", async (req, res) => {
     try {
         const response = await axios.get(
             `${baseUrl}/courses/${req.params.courseId}/assignments?per_page=100`,
