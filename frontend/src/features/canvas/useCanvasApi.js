@@ -38,7 +38,7 @@ const useCanvasApi = () => {
 			setError(null);
 			setLoading(true);
 			const response = await axios.get(
-				`${baseUrl}/canvas/assignments/${courseId}`,
+				`${baseUrl}/canvas/${courseId}/assignments`,
 				{
 					headers: {
 						Authorization: token,
