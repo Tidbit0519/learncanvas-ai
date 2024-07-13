@@ -1,18 +1,21 @@
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import useCanvasApi from "../features/canvas/useCanvasApi";
-
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { styles } from "../utils/styles";
+import useCanvasApi from "../features/canvas/useCanvasApi";
 import AssignmentList from "../components/AssigmentList";
 
 const Assignments = () => {
 	const { courseId } = useParams();
+	const navigate = useNavigate();
+
 	const { loading, error, assignments, getAllAssignments } = useCanvasApi();
 
 	useEffect(() => {
-			getAllAssignments(courseId);
+		getAllAssignments(courseId);
 	}, []);
+
+	const [tutorAssignment, setTutorAssignment] = useState(null);
 
 	return (
 		<div
@@ -47,7 +50,25 @@ const Assignments = () => {
 							<h2 className={`${styles.sectionSubText} pl-2`}>
 								Assignments
 							</h2>
-							<AssignmentList assignments={assignments} />
+							<button
+								className={`p-3 ml-auto rounded-xl text-slate-100 hover:bg-violet-800 tracking-wider max-w-[200px] text-sm min-w-fit ${
+									tutorAssignment !== null
+										? "bg-violet-700"
+										: "bg-slate-500"
+								}`}
+								disabled={!tutorAssignment}
+								onClick={() =>
+									navigate(
+										`/courses/${courseId}/assignments/${tutorAssignment.id}/feedback`
+									)
+								}
+							>
+								Tutor Me!
+							</button>
+							<AssignmentList
+								assignments={assignments}
+								setTutorAssignment={setTutorAssignment}
+							/>
 						</div>
 					</>
 				)}
