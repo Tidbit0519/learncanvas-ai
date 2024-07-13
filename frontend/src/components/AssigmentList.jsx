@@ -37,7 +37,7 @@ const AssignmentList = ({ assignments, setTutorAssignment }) => {
 							{assignment.submission_types.map((type) => (
 								<div
 									key={type}
-									className="text-xs p-2 bg-slate-600 text-slate-100 rounded-md"
+									className="text-xs px-2 py-1 bg-slate-600 text-slate-100 rounded-full"
 								>
 									<p>{type.replaceAll(/_/g, " ")}</p>
 								</div>
