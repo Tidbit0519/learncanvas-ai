@@ -53,4 +53,21 @@ const getAssignments = async (req, res) => {
 	}
 };
 
-export { getSelf, getActiveCourses, getAssignments };
+const getSubmission = async (req, res) => {
+    try {
+        const response = await axios.get(
+            `${baseUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`,
+            {
+                headers: {
+                    Authorization: token,
+                },
+            }
+        );
+        res.status(200).send(response.data);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+}
+
+export { getSelf, getActiveCourses, getAssignments, getSubmission };
