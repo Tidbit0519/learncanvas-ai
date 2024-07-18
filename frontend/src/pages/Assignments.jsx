@@ -31,7 +31,7 @@ const Assignments = () => {
 					</span>
 					{""} and {""}
 					<span className="font-bold underline">
-						online upload
+						online upload (.docx)
 					</span>{" "}
 					for now.
 				</p>
