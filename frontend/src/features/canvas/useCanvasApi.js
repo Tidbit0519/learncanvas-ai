@@ -17,7 +17,7 @@ const useCanvasApi = () => {
 			setError(null);
 			setLoading(true);
 			const response = await axios.get(
-				`${baseUrl}/canvas/activeCourses`,
+				`${baseUrl}/canvas/courses/activeCourses`,
 				{
 					headers: {
 						Authorization: token,
@@ -38,7 +38,7 @@ const useCanvasApi = () => {
 			setError(null);
 			setLoading(true);
 			const response = await axios.get(
-				`${baseUrl}/canvas/${courseId}/assignments`,
+				`${baseUrl}/canvas/courses/${courseId}/assignments`,
 				{
 					headers: {
 						Authorization: token,
