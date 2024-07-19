@@ -23,7 +23,6 @@ const feedback = async (openai, prompt, assistant, res) => {
 			assistant_id: assistant.id,
 		})
         .on("textDelta", (textDelta, snapshot) => {
-            console.log(textDelta.value);
 			res.write(textDelta.value);
 		})
 		// .on("toolCallDelta", (toolCallDelta, snapshot) => {
@@ -43,6 +42,9 @@ const feedback = async (openai, prompt, assistant, res) => {
 		// })
 		.on("end", () => {
 			res.end();
+		})
+		.on("error", (error) => {
+			res.status(500).send("Internal server error");
 		});
 };
 
