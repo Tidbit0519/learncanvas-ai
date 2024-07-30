@@ -19,7 +19,6 @@ const AssignmentList = ({ assignments, setTutorAssignment }) => {
 							: "bg-slate-800"
 					}`}
 					onMouseDown={() => {
-						console.log(assignment);
 						handleAssignmentClick(assignment.id);
 						setTutorAssignment(assignment);
 					}}
