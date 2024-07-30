@@ -9,7 +9,7 @@ const getSelf = async (req, res) => {
             headers: {
                 Authorization: token,
             },
-        });
+		});
         res.status(200).send(response.data);
     } catch (err) {
         console.error(err);
@@ -53,16 +53,34 @@ const getAssignments = async (req, res) => {
 	}
 };
 
-const getSubmission = async (req, res) => {
+const getAssignmentById = async (req, res) => {
+	try {
+		const response = await axios.get(
+			`${baseUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`,
+			{
+				headers: {
+					Authorization: token,
+				},
+			}
+		);
+		res.status(200).send(response.data);
+	} catch (err) {
+		console.error(err);
+		res.status(500).send(err);
+	}
+};
+
+const getSubmissionById = async (req, res) => {
     try {
         const response = await axios.get(
-            `${baseUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`,
-            {
-                headers: {
-                    Authorization: token,
-                },
-            }
-        );
+			`${baseUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`,
+			{
+				headers: {
+					Authorization: token,
+				},
+			}
+		);
+		console.log(response.data);
         res.status(200).send(response.data);
     } catch (err) {
         console.error(err);
@@ -70,4 +88,4 @@ const getSubmission = async (req, res) => {
     }
 }
 
-export { getSelf, getActiveCourses, getAssignments, getSubmission };
+export { getSelf, getActiveCourses, getAssignments, getAssignmentById, getSubmissionById };
