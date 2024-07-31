@@ -32,7 +32,11 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use(bodyParser.text({ type: "text/plain" }));
-app.use("/api/feedback", feedbackRouter);
+app.use(
+	"/api/feedback",
+	passport.authenticate("jwt", { session: false }),
+	feedbackRouter
+);
 
 app.use(bodyParser.json());
 app.get("/ping", (req, res) => {

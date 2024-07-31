@@ -7,15 +7,36 @@ const baseUrl = import.meta.env.VITE_API_URL;
 
 const useCanvasApi = () => {
 	const token = useSelector(selectCurrentToken);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
+	const [canvasLoading, setCanvasLoading] = useState(false);
+	const [canvasError, setCanvasError] = useState(null);
+	const [userId, setUserId] = useState(null);
 	const [activeCourses, setActiveCourses] = useState([]);
 	const [assignments, setAssignments] = useState([]);
+	const [assignment, setAssignment] = useState(null);
+	const [submission, setSubmission] = useState(null);
+
+	const getSelf = async () => {
+		try {
+			setCanvasError(null);
+			setCanvasLoading(true);
+			const response = await axios.get(`${baseUrl}/canvas/users/self`, {
+				headers: {
+					Authorization: token,
+				},
+			});
+			setUserId(response.data.id);
+			setCanvasLoading(false);
+		} catch (err) {
+			setCanvasLoading(false);
+			setCanvasError(err);
+			console.error(err);
+		}
+	}
 
 	const getAllActiveCourses = async () => {
 		try {
-			setError(null);
-			setLoading(true);
+			setCanvasError(null);
+			setCanvasLoading(true);
 			const response = await axios.get(
 				`${baseUrl}/canvas/courses/activeCourses`,
 				{
@@ -25,18 +46,18 @@ const useCanvasApi = () => {
 				}
 			);
 			setActiveCourses(response.data);
-			setLoading(false);
+			setCanvasLoading(false);
 		} catch (err) {
-			setLoading(false);
-			setError(err);
+			setCanvasLoading(false);
+			setCanvasError(err);
 			console.error(err);
 		}
 	};
 
 	const getAllAssignments = async (courseId) => {
 		try {
-			setError(null);
-			setLoading(true);
+			setCanvasError(null);
+			setCanvasLoading(true);
 			const response = await axios.get(
 				`${baseUrl}/canvas/courses/${courseId}/assignments`,
 				{
@@ -46,21 +67,67 @@ const useCanvasApi = () => {
 				}
 			);
 			setAssignments(response.data);
-			setLoading(false);
+			setCanvasLoading(false);
 		} catch (err) {
-			setLoading(false);
-			setError(err);
+			setCanvasLoading(false);
+			setCanvasError(err);
+			console.error(err);
+		}
+	};
+
+	const getAssignmentById = async (courseId, assignmentId) => {
+		try {
+			setCanvasLoading(true);
+			const response = await axios.get(
+				`${baseUrl}/canvas/courses/${courseId}/assignments/${assignmentId}`,
+				{
+					headers: {
+						Authorization: token,
+					},
+				}
+			);
+			setAssignment(response.data);
+			setCanvasLoading(false);
+		} catch (err) {
+			setCanvasLoading(false);
+			setCanvasError(err);
+			console.error(err);
+		}
+	}
+
+	const getSubmissionById = async (courseId, assignmentId, userId) => {
+		try {
+			setCanvasLoading(true);
+			const response = await axios.get(
+				`${baseUrl}/canvas/courses/${courseId}/assignments/${assignmentId}/submissions/${userId}`,
+				{
+					headers: {
+						Authorization: token,
+					},
+				}
+			);
+			setSubmission(response.data);
+			setCanvasLoading(false);
+		} catch (err) {
+			setCanvasLoading(false);
+			setCanvasError(err);
 			console.error(err);
 		}
 	};
 
 	return {
-		loading,
-		error,
+		loading: canvasLoading,
+		error: canvasError,
+		userId,
 		activeCourses,
+		assignment,
 		assignments,
+		submission,
+		getSelf,
 		getAllActiveCourses,
 		getAllAssignments,
+		getAssignmentById,
+		getSubmissionById,
 	};
 };
 
