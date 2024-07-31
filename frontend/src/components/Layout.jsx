@@ -30,7 +30,7 @@ const Layout = () => {
 							href="/"
 							className="text-sm font-bold text-gray-100 uppercase"
 						>
-							Canvas Feeder
+							LearnCanvas AI
 						</a>
 					</div>
 					<div className="flex lg:hidden">
