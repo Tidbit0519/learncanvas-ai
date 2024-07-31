@@ -27,7 +27,7 @@ const Home = () => {
 				</h2>
 				<p className="pl-2">
 					Here are your active courses. Click on a course to view
-					submissions.
+					your assignments and get AI tutor feedback.
 				</p>
 				{loading ? (
 					<p>Loading active courses...</p>
