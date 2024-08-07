@@ -26,13 +26,18 @@ const User = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Submission'
     }],
+    tokenId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Token'
+    },
     lastActive: {
         type: Date,
         default: Date.now
     },
-    refreshToken: {
-        type: String
-    },
+    canLogin: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true
 });
@@ -46,6 +51,10 @@ User.pre('save', async function (next) {
         return next()
     }
 });
+
+User.methods.canLoginCheck = function () {
+    return this.canLogin
+}
 
 User.methods.comparePassword = function (password, cb) {
     bcrypt.compare(password, this.password, (err, isMatch) => {

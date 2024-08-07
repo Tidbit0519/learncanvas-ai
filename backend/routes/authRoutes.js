@@ -1,6 +1,6 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../model/index.js";
+import { User, Token } from "../model/index.js";
 import handleRefreshToken from "../controllers/refreshTokenControllers.js";
 
 const authRouter = Router();
@@ -10,28 +10,34 @@ authRouter.post("/signup", async (req, res) => {
 		!req.body.firstname ||
 		!req.body.lastname ||
 		!req.body.email ||
-		!req.body.password
+		!req.body.password ||
+		!req.body.domainUrl ||
+		!req.body.token
 	) {
-		return res.status(400).send("All fields are required");
+		return res.status(400).send("Missing fields");
 	}
-	const { firstname, lastname, email, password, role } = req.body;
+	const { firstname, lastname, email, password, domainUrl, token } = req.body;
 
 	try {
-		const user = await User.findOne({ email: req.body.email });
+		const user = await User.findOne({ email: email });
 		if (user) {
 			return res.status(400).send("User with this email already exists");
 		}
 
+		const newToken = new Token({ token, domainUrl });
 		const newUser = await User.create({
 			firstname,
 			lastname,
 			email,
 			password,
 			role: "user",
+			tokenId: newToken._id,
 		});
+		newToken.user = newUser._id;
+		await newToken.save();
+
 		res.status(200).json({
 			message: "User created successfully",
-			newUser,
 		});
 	} catch (error) {
 		res.status(500).send(error.message);
@@ -50,6 +56,10 @@ authRouter.post("/login", async (req, res) => {
 		const foundUser = await User.findOne({ email: email });
 		if (!foundUser) {
 			return res.status(401).send("Invalid email or password");
+		}
+
+		if (foundUser.canLoginCheck() === false) {
+			return res.status(401).send("An error has occurred. Please contact the system administrator.");
 		}
 
 		foundUser.comparePassword(req.body.password, async (err, isMatch) => {
