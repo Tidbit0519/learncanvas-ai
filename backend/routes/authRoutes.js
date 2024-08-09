@@ -12,11 +12,12 @@ authRouter.post("/signup", async (req, res) => {
 		!req.body.email ||
 		!req.body.password ||
 		!req.body.domainUrl ||
-		!req.body.token
+		!req.body.canvasToken
 	) {
 		return res.status(400).send("Missing fields");
 	}
-	const { firstname, lastname, email, password, domainUrl, token: canvasToken } = req.body;
+	const { firstname, lastname, email, password, domainUrl, canvasToken } =
+		req.body;
 
 	try {
 		const user = await User.findOne({ email: email });
@@ -24,8 +25,8 @@ authRouter.post("/signup", async (req, res) => {
 			return res.status(400).send("User with this email already exists");
 		}
 
-		const newToken = new Token({ token: canvasToken, domainUrl });
-		const newUser = await User.create({
+		const newToken = await Token.create({ canvasToken, domainUrl });
+		await User.create({
 			firstname,
 			lastname,
 			email,
@@ -33,14 +34,9 @@ authRouter.post("/signup", async (req, res) => {
 			role: "user",
 			tokenId: newToken._id,
 		});
-		newToken.user = newUser._id;
-		await newToken.save();
 
-		res.status(200).json({
-			message: "User created successfully",
-		});
+		res.status(200).send("User created successfully");
 	} catch (error) {
-		console.log(error.name);
 		if (error.name === "ValidationError") {
 			return res.status(400).send("Invalid email address");
 		}
@@ -63,7 +59,11 @@ authRouter.post("/login", async (req, res) => {
 		}
 
 		if (foundUser.canLoginCheck() === false) {
-			return res.status(401).send("An error has occurred. Please contact the system administrator.");
+			return res
+				.status(401)
+				.send(
+					"An error has occurred. Please contact the system administrator."
+				);
 		}
 
 		foundUser.comparePassword(req.body.password, async (err, isMatch) => {
