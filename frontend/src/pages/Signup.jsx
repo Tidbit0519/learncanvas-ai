@@ -12,7 +12,7 @@ const Signup = () => {
 	const [timer, setTimer] = useState(0);
 
 	const { register, handleSubmit } = useForm(
-		{ defaultValues: { firstname: "", lastname: "", email: "", password: "" } }
+		{ defaultValues: { firstname: "", lastname: "", email: "", password: "", domainUrl: "", canvasToken: "" } }
 	);
 	
 	const dispatch = useDispatch();
@@ -45,9 +45,9 @@ const Signup = () => {
 			}
 		} catch (err) {
 			if (err.status === 500) {
-				setErrMsg("Server error. Please try again later.");
+				setErrMsg("An error has occurred. Please contact the system administrator or try again later.");
 			} else {
-				setErrMsg("User with this email already exists.");
+				setErrMsg(err.data);
 			}
 		}
 	};
@@ -83,64 +83,95 @@ const Signup = () => {
 						role="alert"
 					>
 						<strong className="font-bold">Success: </strong>
-							<span className="block sm:inline">{successMsg}</span>
-							<span className="block sm:inline">Redirecting to login in {timer} seconds...</span>
+						<span className="block sm:inline">{successMsg}</span>
+						<span className="block sm:inline">
+							Redirecting to login in {timer} seconds...
+						</span>
 					</div>
 				)}
 
-				<form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-						<label
-							htmlFor="firstname"
-							className="block text-slate-100 text-md font-medium"
-						>
-							First Name:
-						</label>
-						<input
-							type="firstname"
-							id="firstname"
-							name="firstname"
-							className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
-							{...register("firstname", { required: true })}
-						/>
-						<label
-							htmlFor="lastname"
-							className="block text-slate-100 text-md font-medium"
-						>
-							Last Name:
-						</label>
-						<input
-							type="lastname"
-							id="lastname"
-							name="lastname"
-							className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
-							{...register("lastname", { required: true })}
-						/>
-						<label
-							htmlFor="lastname"
-							className="block text-slate-100 text-md font-medium"
-						>
-							Email:
-						</label>
-						<input
-							type="email"
-							id="email"
-							name="email"
-							className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
-							{...register("email", { required: true })}
-						/>
-						<label
-							htmlFor="password"
-							className="block text-slate-100 text-md font-medium"
-						>
-							Password:
-						</label>
-						<input
-							type="password"
-							id="password"
-							name="password"
-							className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
-							{...register("password", { required: true })}
-						/>
+				<form
+					className="space-y-4"
+					onSubmit={handleSubmit(onSubmit)}
+				>
+					<label
+						htmlFor="firstname"
+						className="block text-slate-100 text-md font-medium"
+					>
+						First Name:
+					</label>
+					<input
+						type="firstname"
+						id="firstname"
+						name="firstname"
+						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
+						{...register("firstname", { required: true })}
+					/>
+					<label
+						htmlFor="lastname"
+						className="block text-slate-100 text-md font-medium"
+					>
+						Last Name:
+					</label>
+					<input
+						type="lastname"
+						id="lastname"
+						name="lastname"
+						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
+						{...register("lastname", { required: true })}
+					/>
+					<label
+						htmlFor="lastname"
+						className="block text-slate-100 text-md font-medium"
+					>
+						Email:
+					</label>
+					<input
+						type="email"
+						id="email"
+						name="email"
+						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
+						{...register("email", { required: true })}
+					/>
+					<label
+						htmlFor="password"
+						className="block text-slate-100 text-md font-medium"
+					>
+						Password:
+					</label>
+					<input
+						type="password"
+						id="password"
+						name="password"
+						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
+						{...register("password", { required: true })}
+					/>
+					<label
+						htmlFor="domainUrl"
+						className="block text-slate-100 text-md font-medium"
+					>
+						Domain URL:
+					</label>
+					<input
+						type="domainUrl"
+						id="domainUrl"
+						name="domainUrl"
+						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
+						{...register("domainUrl", { required: true })}
+					/>
+					<label
+						htmlFor="canvasToken"
+						className="block text-slate-100 text-md font-medium"
+					>
+						Canvas Access Token:
+					</label>
+					<input
+						type="canvasToken"
+						id="canvasToken"
+						name="canvasToken"
+						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
+						{...register("canvasToken", { required: true })}
+					/>
 					<div className="pt-4">
 						<button
 							type="submit"
