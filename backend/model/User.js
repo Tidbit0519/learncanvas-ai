@@ -15,11 +15,10 @@ const User = mongoose.Schema(
 			type: String,
 			required: true,
 			unique: true,
-			validate: {
-                validator: function (value) {
-					return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-				},
-			},
+			match: [
+				/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+				"Invalid email address",
+			],
 		},
 		password: {
 			type: String,
