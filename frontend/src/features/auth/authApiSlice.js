@@ -12,10 +12,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
 			}),
 		}),
 		signup: builder.mutation({
-			query: (credentials) => ({
+			query: (data) => ({
 				url: "/auth/signup",
 				method: "POST",
-				body: { ...credentials },
+				body: { ...data },
+				responseHandler: (response) => response.text(),
 			}),
 		}),
 		refresh: builder.mutation({
