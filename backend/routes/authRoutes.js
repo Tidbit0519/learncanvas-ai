@@ -42,7 +42,7 @@ authRouter.post("/signup", async (req, res) => {
 	} catch (error) {
 		console.log(error.name);
 		if (error.name === "ValidationError") {
-			res.status(400).send("Invalid email address");
+			return res.status(400).send("Invalid email address");
 		}
 		res.status(500).send(error.message);
 	}
