@@ -19,7 +19,6 @@ const User = mongoose.Schema(
                 validator: function (value) {
 					return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 				},
-				message: "Invalid email address format",
 			},
 		},
 		password: {
