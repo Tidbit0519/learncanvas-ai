@@ -16,7 +16,7 @@ authRouter.post("/signup", async (req, res) => {
 	) {
 		return res.status(400).send("Missing fields");
 	}
-	const { firstname, lastname, email, password, domainUrl, token } = req.body;
+	const { firstname, lastname, email, password, domainUrl, token: canvasToken } = req.body;
 
 	try {
 		const user = await User.findOne({ email: email });
@@ -24,7 +24,7 @@ authRouter.post("/signup", async (req, res) => {
 			return res.status(400).send("User with this email already exists");
 		}
 
-		const newToken = new Token({ token, domainUrl });
+		const newToken = new Token({ token: canvasToken, domainUrl });
 		const newUser = await User.create({
 			firstname,
 			lastname,

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const tokenSchema = new mongoose.Schema({
-    token: {
+    canvasToken: {
         type: String,
         required: true
     },
