@@ -1,14 +1,44 @@
 import axios from "axios";
+import jwt from "jsonwebtoken";
+import { Token } from "../model/index.js";
 
 const baseUrl = process.env.CANVAS_API_URL;
 const token = "Bearer " + process.env.CANVAS_ACCESS_TOKEN;
 
+const authenticateCanvasToken = async (req, res, next) => {
+	const cookies = req.cookies;
+	if (!cookies?.jwt) {
+		return res.sendStatus(401);
+	}
+
+	try {
+		const decoded = jwt.verify(cookies.jwt, process.env.REFRESH_TOKEN_SECRET);
+		const tokenObj = await Token.findById(decoded.tokenId);
+		if (!tokenObj) return res.sendStatus(403);
+
+		req.canvasToken = tokenObj.canvasToken;
+		req.domainUrl = tokenObj.domainUrl;
+		next();
+	} catch (error) {
+		return res.sendStatus(403);
+	}
+};
+
 const getSelf = async (req, res) => {
-    try {
-        const response = await axios.get(`${baseUrl}/users/self`, {
-            headers: {
-                Authorization: token,
-            },
+	console.log("Getting through req")
+	console.log(req.domainUrl)
+	console.log(req.canvasToken)
+	console.log(`${req.domainUrl}/api/v1/users/self`)
+	console.log("")
+	console.log("Getting through hardcode")
+	console.log(baseUrl)
+	console.log(token)
+	console.log(`${baseUrl}/users/self`)
+	try {
+			const response = await axios.get(`${req.domainUrl}/api/v1/users/self`, {
+				headers: {
+					Authorization: `Bearer ${req.canvasToken}`,
+				},
 		});
         res.status(200).send(response.data);
     } catch (err) {
@@ -21,10 +51,10 @@ const getActiveCourses = async (req, res) => {
 	try {
 		const response = await axios.get(
 			// `${baseUrl}/courses?per_page=100&enrollment_state=active`,
-			`${baseUrl}/courses/1469808`,
+			`${req.domainUrl}/api/v1/courses/1469808`,
 			{
 				headers: {
-					Authorization: token,
+					Authorization: `Bearer ${req.canvasToken}`,
 				},
 			}
 		);
@@ -39,10 +69,10 @@ const getActiveCourses = async (req, res) => {
 const getAssignments = async (req, res) => {
 	try {
 		const response = await axios.get(
-			`${baseUrl}/courses/${req.params.courseId}/assignments?per_page=100`,
+			`${req.domainUrl}/api/v1/courses/${req.params.courseId}/assignments?per_page=100`,
 			{
 				headers: {
-					Authorization: token,
+					Authorization: `Bearer ${req.canvasToken}`,
 				},
 			}
 		);
@@ -56,10 +86,10 @@ const getAssignments = async (req, res) => {
 const getAssignmentById = async (req, res) => {
 	try {
 		const response = await axios.get(
-			`${baseUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`,
+			`${req.domainUrl}/api/v1/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`,
 			{
 				headers: {
-					Authorization: token,
+					Authorization: `Bearer ${req.canvasToken}`,
 				},
 			}
 		);
@@ -73,10 +103,10 @@ const getAssignmentById = async (req, res) => {
 const getSubmissionById = async (req, res) => {
     try {
         const response = await axios.get(
-			`${baseUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`,
+			`${req.domainUrl}/api/v1/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`,
 			{
 				headers: {
-					Authorization: token,
+					Authorization: `Bearer ${req.canvasToken}`,
 				},
 			}
 		);
@@ -87,4 +117,4 @@ const getSubmissionById = async (req, res) => {
     }
 }
 
-export { getSelf, getActiveCourses, getAssignments, getAssignmentById, getSubmissionById };
+export { authenticateCanvasToken, getSelf, getActiveCourses, getAssignments, getAssignmentById, getSubmissionById };
