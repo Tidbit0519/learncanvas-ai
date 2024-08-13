@@ -21,6 +21,7 @@ const handleRefreshToken = async (req, res) => {
 				id: foundUser._id,
 				firstname: foundUser.firstname,
 				role: foundUser.role,
+				tokenId: foundUser.tokenId,
 			};
 
 			const accessToken = jwt.sign(tokenObj, process.env.JWT_SECRET, {
