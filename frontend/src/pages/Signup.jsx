@@ -1,20 +1,34 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { Tooltip } from "react-tooltip";
 
 import { useDispatch, connect } from "react-redux";
 import { registerCredentials } from "../features/auth/authSlice";
 import { useSignupMutation } from "../features/auth/authApiSlice";
 
 const Signup = () => {
+	const [showMessage, setShowMessage] = useState(false);
+	const handleTokenInput = () => {
+		setShowMessage(true);
+	};
+
 	const [successMsg, setSuccessMsg] = useState(false);
 	const [errMsg, setErrMsg] = useState(false);
 	const [timer, setTimer] = useState(0);
 
-	const { register, handleSubmit } = useForm(
-		{ defaultValues: { firstname: "", lastname: "", email: "", password: "", domainUrl: "", canvasToken: "" } }
-	);
-	
+	const { register, handleSubmit } = useForm({
+		defaultValues: {
+			firstname: "",
+			lastname: "",
+			email: "",
+			password: "",
+			domainUrl: "",
+			canvasToken: "",
+		},
+	});
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -31,7 +45,6 @@ const Signup = () => {
 		if (timer === 0 && successMsg) {
 			navigate("/login");
 		}
-
 	}, [timer]);
 
 	const onSubmit = async (data) => {
@@ -45,7 +58,9 @@ const Signup = () => {
 			}
 		} catch (err) {
 			if (err.status === 500) {
-				setErrMsg("An error has occurred. Please contact the system administrator or try again later.");
+				setErrMsg(
+					"An error has occurred. Please contact the system administrator or try again later."
+				);
 			} else {
 				setErrMsg(err.data);
 			}
@@ -120,12 +135,14 @@ const Signup = () => {
 						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
 						{...register("lastname", { required: true })}
 					/>
+
 					<label
 						htmlFor="lastname"
 						className="block text-slate-100 text-md font-medium"
 					>
 						Email:
 					</label>
+
 					<input
 						type="email"
 						id="email"
@@ -146,12 +163,35 @@ const Signup = () => {
 						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
 						{...register("password", { required: true })}
 					/>
-					<label
-						htmlFor="domainUrl"
-						className="block text-slate-100 text-md font-medium"
-					>
-						Domain URL:
-					</label>
+					<div className="relative flex items-center">
+						<label
+							htmlFor="domainUrl"
+							className="block text-slate-100 text-md font-medium"
+						>
+							Domain URL:
+						</label>
+						<QuestionMarkCircleIcon
+							id="domainUrlTooltip"
+							className="h-5 w-5 text-slate-400 cursor-pointer absolute right-1"
+						/>
+						<Tooltip
+							clickable
+							anchorSelect="#domainUrlTooltip"
+							place="right"
+						>
+							<div className="max-w-64">
+								Enter the base URL for your Canvas instance.
+								This is typically formatted as{" "}
+								<span className="font-bold underline">
+									https://
+									<span className="italic">school-name</span>
+									.instructure.com
+								</span>
+								. Ensure you include &apos;https://&apos; at the
+								beginning.
+							</div>
+						</Tooltip>
+					</div>
 					<input
 						type="domainUrl"
 						id="domainUrl"
@@ -159,19 +199,52 @@ const Signup = () => {
 						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
 						{...register("domainUrl", { required: true })}
 					/>
-					<label
-						htmlFor="canvasToken"
-						className="block text-slate-100 text-md font-medium"
-					>
-						Canvas Access Token:
-					</label>
+					<div className="relative flex items-center">
+						<label
+							htmlFor="canvasToken"
+							className="block text-slate-100 text-md font-medium"
+						>
+							Canvas Access Token:
+						</label>
+						<QuestionMarkCircleIcon
+							id="canvasTokenTooltip"
+							className="h-5 w-5 text-slate-400 cursor-pointer absolute right-1"
+						/>
+						<Tooltip
+							clickable
+							anchorSelect="#canvasTokenTooltip"
+							place="right"
+						>
+							<div className="max-w-64">
+								Enter your Canvas Personal Access Token for API
+								access. Generate or manage this token in your
+								Canvas settings. Keep it secure and do not
+								share. For more details, visit{" "}
+								<a
+									href="https://community.canvaslms.com/t5/Student-Guide/How-do-I-manage-API-access-tokens-as-a-student/ta-p/273"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="underline text-blue-600 hover:text-blue-800"
+								>
+									managing API tokens.
+								</a>
+							</div>
+						</Tooltip>
+					</div>
 					<input
 						type="canvasToken"
 						id="canvasToken"
 						name="canvasToken"
 						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
 						{...register("canvasToken", { required: true })}
+							onFocus={handleTokenInput}
 					/>
+					{showMessage && (
+						<div className="italic text-slate-400 text-sm">
+							Your token is set to expire in 7 days. Please regenerate a new token to continue using the
+							application after it expires.
+						</div>
+					)}
 					<div className="pt-4">
 						<button
 							type="submit"
@@ -195,5 +268,13 @@ const Signup = () => {
 	);
 };
 
-connect(({ email, firstname, lastname, canvasToken }) => ({ email, firstname, lastname, canvasToken }), { registerCredentials })(Signup);
+connect(
+	({ email, firstname, lastname, canvasToken }) => ({
+		email,
+		firstname,
+		lastname,
+		canvasToken,
+	}),
+	{ registerCredentials }
+)(Signup);
 export default Signup;
