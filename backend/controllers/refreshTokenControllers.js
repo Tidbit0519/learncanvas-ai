@@ -7,14 +7,16 @@ const handleRefreshToken = async (req, res) => {
 		return res.sendStatus(401);
 	}
 	const refreshToken = cookies.jwt;
+	const userId = jwt.decode(refreshToken).id;
 
-	const foundUser = await User.findOne({ refreshToken: refreshToken });
+	const foundUser = await User.findOne({ _id: userId });
 	if (!foundUser) return res.sendStatus(403);
 	jwt.verify(
 		refreshToken,
 		process.env.REFRESH_TOKEN_SECRET,
 		(err, decoded) => {
 			if (err || foundUser._id.toString() !== decoded.id) {
+				console.log(err);
 				return res.sendStatus(403);
 			}
 			const tokenObj = {
