@@ -2,17 +2,12 @@ import axios from "axios";
 import jwt from "jsonwebtoken";
 import { Token } from "../model/index.js";
 
-const baseUrl = process.env.CANVAS_API_URL;
-const token = "Bearer " + process.env.CANVAS_ACCESS_TOKEN;
-
 const authenticateCanvasToken = async (req, res, next) => {
-	const cookies = req.cookies;
-	if (!cookies?.jwt) {
-		return res.sendStatus(401);
-	}
+	const authHeader = req.headers.authorization;
+	const token = authHeader && authHeader.split(" ")[1];
 
 	try {
-		const decoded = jwt.verify(cookies.jwt, process.env.REFRESH_TOKEN_SECRET);
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
 		const tokenObj = await Token.findById(decoded.tokenId);
 		if (!tokenObj) return res.sendStatus(403);
 
@@ -25,15 +20,6 @@ const authenticateCanvasToken = async (req, res, next) => {
 };
 
 const getSelf = async (req, res) => {
-	console.log("Getting through req")
-	console.log(req.domainUrl)
-	console.log(req.canvasToken)
-	console.log(`${req.domainUrl}/api/v1/users/self`)
-	console.log("")
-	console.log("Getting through hardcode")
-	console.log(baseUrl)
-	console.log(token)
-	console.log(`${baseUrl}/users/self`)
 	try {
 			const response = await axios.get(`${req.domainUrl}/api/v1/users/self`, {
 				headers: {
@@ -58,7 +44,6 @@ const getActiveCourses = async (req, res) => {
 				},
 			}
 		);
-		// res.status(200).send(response.data);
 		res.status(200).send([response.data]);
 	} catch (err) {
 		console.error(err);

@@ -45,9 +45,7 @@ authRouter.post("/signup", async (req, res) => {
 });
 
 authRouter.post("/login", async (req, res) => {
-	const cookies = req.cookies;
-
-	const { email, password } = req.body;
+const { email, password } = req.body;
 
 	if (!email || !password)
 		return res.status(400).send("Username and password are required.");
@@ -97,7 +95,7 @@ authRouter.post("/login", async (req, res) => {
 					secure: true,
 					maxAge: 86400000,
 				});
-
+				
 				return res.status(200).json({
 					token: "Bearer " + accessToken,
 				});
