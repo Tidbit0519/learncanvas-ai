@@ -1,6 +1,6 @@
 import { Router } from "express";
+import authenticateCanvasToken from "../middleware/authenticateCanvasToken.js";
 import {
-	authenticateCanvasToken,
 	getSelf,
 	getActiveCourses,
 	getAssignments,
