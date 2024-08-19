@@ -1,7 +1,17 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import {
+	UserCircleIcon,
+	ChevronDownIcon,
+	ArrowRightIcon,
+} from "@heroicons/react/24/outline";
 import NavIcon from "../assets/icon-128.png";
+import useAuth from "../hooks/useAuth";
 
 const Layout = () => {
+	const { firstname } = useAuth();
+	const navigate = useNavigate();
+
 	return (
 		<>
 			<header className="bg-slate-800">
@@ -19,18 +29,46 @@ const Layout = () => {
 						</a>
 						<a
 							href="/"
-							className="hidden lg:text-md font-bold text-gray-100 uppercase tracking-wider"
+							className="sm:hidden lg:block lg:text-md font-bold text-slate-100 uppercase tracking-wider"
 						>
 							LearnCanvas AI
 						</a>
 					</div>
-					<div className="hidden lg:flex lg:flex-1 lg:justify-end">
-						<a
-							href="/login"
-							className="text-sm font-semibold leading-6 text-gray-100"
-						>
-							Log Out <span aria-hidden="true">&rarr;</span>
-						</a>
+					<div className="flex flex-1 justify-end">
+						<Menu>
+							<MenuButton className="inline-flex items-center gap-2 rounded-md py-1.5 px-3 text-sm font-semibold text-slate-100 data-[hover]:bg-slate-700 data-[open]:bg-slate-700">
+								<UserCircleIcon className="h-8 w-8 text-slate-100" />
+								<div className="hidden lg:block font-semibold text-base">
+									{firstname}
+								</div>
+								<ChevronDownIcon className="size-4 text-slate-100" />
+							</MenuButton>
+
+							<MenuItems
+								transition
+								anchor="bottom end"
+								className="w-52 origin-top-right rounded-xl border border-slate-600 bg-slate-700 p-1 text-sm font-semibold text-slate-100 transition duration-100 ease-out mt-2"
+							>
+								<MenuItem>
+									<button
+										className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-slate-600"
+										onClick={() => navigate("/profile")}
+									>
+										Profile
+									</button>
+								</MenuItem>
+								<div className="my-1 h-px bg-white/5" />
+								<MenuItem>
+									<button
+										className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-slate-600 justify-between"
+										onClick={() => navigate("/login")}
+									>
+										Log Out
+										<ArrowRightIcon className="size-4 fill-white/60" />
+									</button>
+								</MenuItem>
+							</MenuItems>
+						</Menu>
 					</div>
 				</nav>
 			</header>
