@@ -66,15 +66,12 @@ User.methods.canLoginCheck = function () {
 	return this.canLogin;
 };
 
-User.methods.comparePassword = function (password) {
-	bcrypt.compare(password, this.password, async (err, isMatch) => {
-		const hash = await bcrypt.hash(password, 10)
-		console.log(hash)
-		console.log(this.password)
+User.methods.comparePassword = function (password, cb) {
+	bcrypt.compare(password, this.password, (err, isMatch) => {
 		if (err) {
-			return err;
+			return cb(err);
 		}
-		return isMatch;
+		cb(null, isMatch);
 	});
 };
 
