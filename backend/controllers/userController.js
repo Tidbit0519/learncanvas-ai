@@ -8,10 +8,10 @@ const getAllUsers = async (req, res) => {
 		}
 
 		const allUsers = await User.find({});
-		res.status(200).send(allUsers);
+		return res.status(200).send(allUsers);
 	} catch (error) {
 		console.error("Error fetching users:", error);
-		res.status(500).send("Internal server error");
+		return res.status(500).send("Internal server error");
 	}
 };
 
@@ -27,17 +27,16 @@ const getUserById = async (req, res) => {
 		if (!getUser) {
 			return res.status(404).send("User not found");
 		}
-		res.status(200).send(getUser);
+		return res.status(200).send(getUser);
 	} catch (error) {
 		console.error("Error fetching user:", error);
-		res.status(500).send("Internal server error");
+		return res.status(500).send("Internal server error");
 	}
 };
 
 const updateUserById = async (req, res) => {
 	try {
-		const { currentPassword, newPassword } = req.query;
-		const { firstname, lastname, email, role } = req.body;
+		const { firstname, lastname, email, role, currentPassword, newPassword } = req.body;
 
 		const currentUser = await User.findById(req.user._id);
 		// Check if user is admin or user is trying to update their own info
@@ -53,21 +52,14 @@ const updateUserById = async (req, res) => {
 		// Check if user is trying to update email or password
 		if (email || (currentPassword && newPassword)) {
 			if (!currentUser.isAdmin()) {
-				if (!currentPassword) {
+				if (!currentPassword || !user.comparePassword(currentPassword)) {
 					return res
 						.status(403)
-						.send(
-							"Please provide current password to update email"
-						);
+						.send("Current password is incorrect");
 				}
-				user.comparePassword(currentPassword, async (err, isMatch) => {
-					if (!isMatch) {
-						return res.status(403).send("Invalid password");
-					}
-				});
 			}
 			if (email) {
-				user.email = email;
+				user.email = email;	
 			}
 			if (newPassword) {
 				user.password = newPassword;
@@ -83,12 +75,11 @@ const updateUserById = async (req, res) => {
 		if (role && currentUser.isAdmin()) {
 			user.role = role;
 		}
-
 		await user.save();
-		return res.status(200).send(user);
+		return res.status(200).send("User updated successfully");
 	} catch (error) {
 		console.error("Error updating user:", error);
-		res.status(500).send("Internal server error");
+		return res.status(500).send("Internal server error");
 	}
 };
 
@@ -105,10 +96,10 @@ const deleteUserById = async (req, res) => {
 		}
 
 		await Submission.deleteMany({ user: req.params.id });
-		res.status(200).send("User deleted");
+		return res.status(200).send("User deleted");
 	} catch (error) {
 		console.error("Error deleting user:", error);
-		res.status(500).send("Internal server error");
+		return res.status(500).send("Internal server error");
 	}
 };
 
