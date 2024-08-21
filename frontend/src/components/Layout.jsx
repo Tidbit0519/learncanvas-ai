@@ -57,7 +57,7 @@ const Layout = () => {
 										Profile
 									</button>
 								</MenuItem>
-								<div className="my-1 h-px bg-white/5" />
+								<div className="my-1 h-px bg-slate-600" />
 								<MenuItem>
 									<button
 										className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-slate-600 justify-between"
