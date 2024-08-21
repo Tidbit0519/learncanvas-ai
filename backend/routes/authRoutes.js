@@ -45,7 +45,7 @@ authRouter.post("/signup", async (req, res) => {
 });
 
 authRouter.post("/login", async (req, res) => {
-const { email, password } = req.body;
+	const { email, password } = req.body;
 
 	if (!email || !password)
 		return res.status(400).send("Username and password are required.");
@@ -64,45 +64,43 @@ const { email, password } = req.body;
 				);
 		}
 
-		foundUser.comparePassword(req.body.password, async (err, isMatch) => {
-			if (isMatch) {
-				const tokenObj = {
-					id: foundUser._id,
-					firstname: foundUser.firstname,
-					role: foundUser.role,
-					tokenId: foundUser.tokenId,
-				};
+		if (await foundUser.comparePassword(password)) {
+			const tokenObj = {
+				id: foundUser._id,
+				firstname: foundUser.firstname,
+				role: foundUser.role,
+				tokenId: foundUser.tokenId,
+			};
 
-				const accessToken = jwt.sign(tokenObj, process.env.JWT_SECRET, {
+			const accessToken = jwt.sign(tokenObj, process.env.JWT_SECRET, {
+				expiresIn: "1d",
+			}); // change to 15m in production
+
+			const refreshToken = jwt.sign(
+				tokenObj,
+				process.env.REFRESH_TOKEN_SECRET,
+				{
 					expiresIn: "1d",
-				}); // change to 15m in production
+				}
+			);
 
-				const refreshToken = jwt.sign(
-					tokenObj,
-					process.env.REFRESH_TOKEN_SECRET,
-					{
-						expiresIn: "1d",
-					}
-				);
+			foundUser.refreshToken = refreshToken;
+			await foundUser.save();
 
-				foundUser.refreshToken = refreshToken;
-				await foundUser.save();
+			res.cookie("jwt", refreshToken, {
+				httpOnly: true,
+				sameSite: "None",
+				expires: new Date(Date.now() + 86400000),
+				secure: true,
+				maxAge: 86400000,
+			});
 
-				res.cookie("jwt", refreshToken, {
-					httpOnly: true,
-					sameSite: "None",
-					expires: new Date(Date.now() + 86400000),
-					secure: true,
-					maxAge: 86400000,
-				});
-				
-				return res.status(200).json({
-					token: "Bearer " + accessToken,
-				});
-			} else {
-				return res.status(401).send("Invalid email or password");
-			}
-		});
+			return res.status(200).json({
+				token: "Bearer " + accessToken,
+			});
+		} else {
+			return res.status(401).send("Invalid email or password");
+		}
 	} catch (error) {
 		res.status(500).send(error.message);
 	}

@@ -52,7 +52,9 @@ const useUserApi = () => {
     const updateUserById = async (userId, data) => {
         try {
             setLoading(true);
-            await axios.patch(
+            console.log("Data", data);
+            // eslint-disable-next-line no-unused-vars
+            const response = await axios.patch(
                 `${baseUrl}/users/${userId}`,
                 data,
                 {
@@ -61,16 +63,11 @@ const useUserApi = () => {
                     },
                 }
             );
-            console.log("updated user");
             setLoading(false);
             return true;
         } catch (err) {
             setLoading(false);
-            if (err.response.request.status === 401 || err.response.request.status === 403) {
-                setError("Invalid password");
-            } else {
-                setError("Something went wrong. Please try again later.");
-            }
+            setError(err.response.data);
             console.error(err);
         }
     };

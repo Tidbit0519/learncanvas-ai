@@ -36,8 +36,14 @@ const getUserById = async (req, res) => {
 
 const updateUserById = async (req, res) => {
 	try {
-		const { currentPassword, newPassword } = req.query;
-		const { firstname, lastname, email, role } = req.body;
+		const {
+			firstname,
+			lastname,
+			email,
+			role,
+			currentPassword,
+			newPassword,
+		} = req.body;
 
 		const currentUser = await User.findById(req.user._id);
 		// Check if user is admin or user is trying to update their own info
@@ -50,30 +56,30 @@ const updateUserById = async (req, res) => {
 			return res.status(404).send("User not found");
 		}
 
-		// Check if user is trying to update email or password
-		if (email || (currentPassword && newPassword)) {
-			if (!currentUser.isAdmin()) {
-				if (!currentPassword) {
-					return res
-						.status(403)
-						.send(
-							"Please provide current password to update email"
-						);
+		// If trying to update email or password and not admin
+		if (
+			!currentUser.isAdmin() &&
+			(email || (currentPassword && newPassword))
+		) {
+			if (currentPassword) {
+				if (!(await currentUser.comparePassword(currentPassword))) {
+					return res.status(403).send("Invalid password");
 				}
-				user.comparePassword(currentPassword, async (err, isMatch) => {
-					if (!isMatch) {
-						return res.status(403).send("Invalid password");
-					}
-				});
-			}
-			if (email) {
-				user.email = email;
-			}
-			if (newPassword) {
-				user.password = newPassword;
+			} else {
+				return res
+					.status(403)
+					.send(
+						"Please provide current password to update email or password"
+					);
 			}
 		}
 
+		if (email) {
+			user.email = email;
+		}
+		if (newPassword) {
+			user.password = newPassword;
+		}
 		if (firstname) {
 			user.firstname = firstname;
 		}

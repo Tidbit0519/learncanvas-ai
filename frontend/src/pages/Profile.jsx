@@ -40,7 +40,7 @@ const Profile = () => {
 
 	const onSubmit = (data) => {
 		const { id } = jwtDecode(token);
-		if (updateUserById(id, data) === true) {
+		if (updateUserById(id, data)) {
 			setSuccessMsg("User information updated successfully.");
 		}
 	};

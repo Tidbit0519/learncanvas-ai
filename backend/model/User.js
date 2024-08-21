@@ -66,13 +66,8 @@ User.methods.canLoginCheck = function () {
 	return this.canLogin;
 };
 
-User.methods.comparePassword = function (password, cb) {
-	bcrypt.compare(password, this.password, (err, isMatch) => {
-		if (err) {
-			return cb(err);
-		}
-		cb(null, isMatch);
-	});
+User.methods.comparePassword = async function (password) {
+	return await bcrypt.compare(password, this.password);
 };
 
 User.methods.isAdmin = function () {
