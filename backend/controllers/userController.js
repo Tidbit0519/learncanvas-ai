@@ -118,4 +118,12 @@ const deleteUserById = async (req, res) => {
 	}
 };
 
-export { getAllUsers, getUserById, updateUserById, deleteUserById };
+const resetPromptLeft = async () => {
+	try {
+		await User.updateMany({}, { promptLeft: 10 });
+	} catch (error) {
+		console.error("Error resetting prompt left:", error);
+	}
+}
+
+export { getAllUsers, getUserById, updateUserById, deleteUserById, resetPromptLeft };

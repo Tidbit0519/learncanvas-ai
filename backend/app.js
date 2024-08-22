@@ -16,6 +16,9 @@ import {
 	feedbackRouter,
 } from "./routes/index.js";
 
+import cron from "node-cron";
+import { resetPromptLeft } from "./controllers/userController.js";
+
 dotenv.config();
 connectDB();
 passportConfig(passport);
@@ -27,6 +30,16 @@ const corsOptions = {
 	origin: ["http://127.0.0.1:5173", "http://localhost:5173"],
 	credentials: true,
 };
+
+// Reset prompt left for all users at midnight
+cron.schedule("0 0 * * *", async () => {
+	console.log("Resetting prompt left for all users");
+	try {
+		await resetPromptLeft();
+	} catch (error) {
+		console.error("Error resetting prompt left:", error);
+	}
+});
 
 app.use(cors(corsOptions));
 app.use(cookieParser());

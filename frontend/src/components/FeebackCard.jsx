@@ -42,7 +42,7 @@ const FeedbackCard = ({ assignment, submission }) => {
 				<h2 className={`${styles.sectionSubText}`}>Feedback</h2>
 				{error && (
 					<p className="text-red-500 bg-red-200 rounded-md p-2 text-md text-center">
-						Error loading feedback. Please try again later.
+						{error.response.data}
 					</p>
 				)}
 

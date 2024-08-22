@@ -46,6 +46,10 @@ const User = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		promptLeft: {
+			type: Number,
+			default: 10,
+		},
 	},
 	{
 		timestamps: true,
@@ -77,5 +81,9 @@ User.methods.isAdmin = function () {
 User.methods.idCheck = function (req) {
 	return this._id.toString() === req.params.id.toString();
 };
+
+User.methods.checkPromptLeft = function () {
+	return this.promptLeft > 0;
+};	
 
 export default mongoose.model("User", User);

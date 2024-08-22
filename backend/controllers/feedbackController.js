@@ -3,6 +3,7 @@ import mammoth from "mammoth";
 import dotenv from "dotenv";
 import OpenAI from "openai";
 import feedback from "../assistant.js";
+import { User } from "../model/index.js";
 
 dotenv.config({ path: ".env", override: true });
 
@@ -12,6 +13,12 @@ const assistant = await openai.beta.assistants.retrieve(
 );
 
 const handleFeedback = async (req, res) => {
+	const currentUser = await User.findById(req.user._id);
+	
+	if (!currentUser.checkPromptLeft()) {
+		return res.status(403).send("You have reached your daily limit of prompts");
+	}
+
 	try {
 		if (req.query || req.body) {
 			let prompt = "";
@@ -36,11 +43,11 @@ const handleFeedback = async (req, res) => {
 			req.params === undefined ||
 			req.params === ""
 		) {
-			return res.status(400).json({ message: "No prompt provided" });
+			return res.status(400).send("No prompt provided");
 		}
 	} catch (error) {
 		console.error(error);
-		res.status(500).send("Internal server error");
+		res.status(500).send("An error has occurred. Please contact the administrator.");
 	}
 };
 
