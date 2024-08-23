@@ -26,22 +26,23 @@ const Home = () => {
 					Your Active Courses
 				</h2>
 				<p className="pl-2">
-					Here are your active courses. Click on a course to view
-					your assignments and get AI tutor feedback.
+					Here are your active courses. Click on a course to view your
+					assignments and get AI tutor feedback.
 				</p>
-				{loading ? (
-					<p>Loading active courses...</p>
-				) : (
+				{loading && <p>Loading active courses...</p>}
+				{activeCourses && (
 					<div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-4">
-						{activeCourses.length !== 0 ? (
-							activeCourses.map((course) => (
+						{activeCourses[0] !== undefined? (
+							activeCourses[0].map((course) => (
 								<CanvasCourseCard
 									key={course.id}
 									course={course}
 								/>
 							))
 						) : (
-							<p>No active courses found.</p>
+							<p className="text-slate-500 text-center">
+								You have no active courses.
+							</p>
 						)}
 					</div>
 				)}
