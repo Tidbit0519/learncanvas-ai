@@ -31,14 +31,14 @@ const FeedbackCard = ({ assignment, submission }) => {
 	return (
 		<>
 			{submission && (
-				<p className="text-slate-400">
+				<p className="text-slate-400 p-2">
 					{submission.submission_type === "online_text_entry" ||
 					submission.attachments?.[0]?.filename.endsWith(".docx")
 						? "We have your submission!"
-						: "Submission type not supported"}
+						: "We have your submission, but the AI tutor only supports online text entry and online upload (.docx) for now."}
 				</p>
 			)}
-			<div className="bg-slate-700 rounded-lg p-4 flex flex-col gap-2">
+			<div className="sm:bg-slate-700 sm:rounded-lg sm:p-4 flex flex-col gap-2 lg:bg-slate-900 lg:rounded-none lg:p-0">
 				<h2 className={`${styles.sectionSubText}`}>Feedback</h2>
 				{error && (
 					<p className="text-red-500 bg-red-200 rounded-md p-2 text-md text-center">
@@ -60,7 +60,7 @@ const FeedbackCard = ({ assignment, submission }) => {
 						disabled={loading || error}
 						onClick={handleFeedback}
 					>
-						Generate Feedback
+						Regenerate Feedback
 					</button>
 				</div>
 			</div>

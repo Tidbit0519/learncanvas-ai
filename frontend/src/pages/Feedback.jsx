@@ -44,20 +44,24 @@ const Feedback = () => {
 					for now.
 				</p>
 			</div>
-			<div className="flex flex-col gap-4 bg-slate-900 p-6 rounded-2xl h-full w-full">
+			<div className="flex flex-col lg:flex-row gap-4 bg-slate-900 p-6 rounded-2xl h-full w-full">
 				{canvasError && (
 					<p className="text-red-500 bg-red-200 rounded-md p-2 text-md text-center mb-4 w-full lg:w-1/2">
 						Error loading assignments. Please try again later.
 					</p>
 				)}
-				{assignment && <AssignmentCard assignment={assignment} />}
+				<div className="w-full overflow-y-auto max-h-[80vh]">
+					{assignment && <AssignmentCard assignment={assignment} />}
+				</div>
 				<div className="pt-2 border-t-2" />
-				{submission && (
-					<FeedbackCard
-						assignment={assignment}
-						submission={submission}
-					/>
-				)}
+				<div className="w-full overflow-y-auto max-h-[80vh]">
+					{submission && (
+						<FeedbackCard
+							assignment={assignment}
+							submission={submission}
+						/>
+					)}
+				</div>
 			</div>
 		</div>
 	);
