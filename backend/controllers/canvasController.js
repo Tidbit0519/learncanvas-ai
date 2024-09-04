@@ -17,8 +17,7 @@ const getSelf = async (req, res) => {
 const getActiveCourses = async (req, res) => {
 	try {
 		const response = await axios.get(
-			// `${baseUrl}/courses?per_page=100&enrollment_state=active`,
-			`${req.domainUrl}/api/v1/courses/1469808`,
+			`${req.domainUrl}/api/v1/courses?per_page=10&enrollment_state=active`,
 			{
 				headers: {
 					Authorization: `Bearer ${req.canvasToken}`,
