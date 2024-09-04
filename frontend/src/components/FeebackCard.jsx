@@ -4,8 +4,6 @@ import ReactMarkdown from "react-markdown";
 import useFeedbackApi from "../features/feedback/useFeedbackApi";
 import { styles } from "../utils/styles";
 
-const openAPIFlag = import.meta.env.VITE_OPENAPI_FLAG;
-
 const FeedbackCard = ({ assignment, submission }) => {
 	const { description } = assignment;
 	const { loading, error, feedback, getFeedback, setFeedback } =
@@ -17,13 +15,24 @@ const FeedbackCard = ({ assignment, submission }) => {
 		"My submission: " +
 		submission?.body;
 
+	const checkSubmissionType = () => {
+		if (
+			submission.submission_type === "online_text_entry" ||
+			submission.attachments?.[0]?.filename.endsWith(".docx")
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
 	const handleFeedback = async () => {
 		setFeedback("");
 		getFeedback(submission.attachments?.[0]?.url, prompt);
 	};
 
 	useEffect(() => {
-		if (submission && openAPIFlag) {
+		if (submission && checkSubmissionType()) {
 			handleFeedback();
 		}
 	}, [submission]);
@@ -57,7 +66,7 @@ const FeedbackCard = ({ assignment, submission }) => {
 						className={`mt-2 p-3 py-2 ml-auto rounded-xl text-slate-100 hover:bg-violet-800 tracking-wider max-w-[200px] text-sm min-w-fit ${
 							feedback !== "" ? "bg-violet-700" : "bg-slate-500"
 						}`}
-						disabled={loading || error}
+						disabled={loading || error || !checkSubmissionType()}
 						onClick={handleFeedback}
 					>
 						Regenerate Feedback
