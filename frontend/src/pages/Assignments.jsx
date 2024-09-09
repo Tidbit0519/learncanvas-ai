@@ -10,17 +10,16 @@ const Assignments = () => {
 	const navigate = useNavigate();
 
 	const { loading, error, assignments, getAllAssignments } = useCanvasApi();
-
 	useEffect(() => {
 		getAllAssignments(courseId);
 	}, []);
 
 	const [tutorAssignment, setTutorAssignment] = useState(null);
 
+	const [searchTerm, setSearchTerm] = useState("");
+
 	return (
-		<div
-			className={`flex flex-col justify-center gap-4 py-8 my-8 mx-4`}
-		>
+		<div className={`flex flex-col justify-center gap-4 py-8 my-8 mx-4`}>
 			{/* It only works for online text entry and online upload for now */}
 			<div className="flex items-center gap-2 bg-violet-500 p-2 rounded-lg text-slate-100 px-4">
 				<ExclamationCircleIcon className="h-20 w-20 lg:h-5 lg:w-5" />
@@ -50,6 +49,17 @@ const Assignments = () => {
 							<h2 className={`${styles.sectionSubText} pl-2`}>
 								Assignments
 							</h2>
+							<div className="flex flex-col gap-4">
+								<input
+									type="text"
+									placeholder="Search assignments..."
+									className="p-2 rounded-md bg-slate-600 text-slate-100 border-none"
+									value={searchTerm}
+									onChange={(e) =>
+										setSearchTerm(e.target.value)
+									}
+								/>
+							</div>
 							<button
 								className={`p-3 ml-auto rounded-xl text-slate-100 hover:bg-violet-800 tracking-wider max-w-[200px] text-sm min-w-fit ${
 									tutorAssignment !== null
@@ -68,6 +78,7 @@ const Assignments = () => {
 							<AssignmentList
 								assignments={assignments}
 								setTutorAssignment={setTutorAssignment}
+								searchTerm={searchTerm}
 							/>
 						</div>
 					</>

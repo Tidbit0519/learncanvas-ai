@@ -2,15 +2,17 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
 
-const AssignmentList = ({ assignments, setTutorAssignment }) => {
+const AssignmentList = ({ assignments, setTutorAssignment, searchTerm }) => {
+	const filteredAssignments = searchTerm !== "" ? assignments.filter((assignment) => assignment.name.toLowerCase().includes(searchTerm.toLowerCase())) : assignments;
+
 	const [activeId, setActiveId] = useState(null);
 	const [itemOffset, setItemOffset] = useState(0);
 	const endOffset = itemOffset + 10;
-	const currentItems = assignments.slice(itemOffset, endOffset);
-	const pageCount = Math.ceil(assignments.length / 10);
+	const currentItems = filteredAssignments.slice(itemOffset, endOffset);
+	const pageCount = Math.ceil(filteredAssignments.length / 10);
 
 	const handlePageClick = (event) => {
-		const newOffset = event.selected * 10 % assignments.length;
+		const newOffset = (event.selected * 10) % filteredAssignments.length;
 		setItemOffset(newOffset);
 	};
 
@@ -66,6 +68,7 @@ const AssignmentList = ({ assignments, setTutorAssignment }) => {
 AssignmentList.propTypes = {
 	assignments: PropTypes.array.isRequired,
 	setTutorAssignment: PropTypes.func.isRequired,
+	searchTerm: PropTypes.string,
 };
 
 export default AssignmentList;
