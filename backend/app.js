@@ -1,3 +1,4 @@
+import "./bin/www";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -36,13 +37,7 @@ cron.schedule("0 0 * * *", async () => {
 	}
 });
 
-app.use(cors(
-	{
-		origin: process.env.CORS_ORIGIN,
-		credentials: true,
-	}
-));
-console.log(process.env.CORS_ORIGIN);
+app.use(cors());
 app.use(cookieParser());
 
 app.use(bodyParser.text({ type: "text/plain" }));
