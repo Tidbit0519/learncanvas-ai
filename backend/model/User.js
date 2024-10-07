@@ -44,7 +44,7 @@ const User = mongoose.Schema(
 		},
 		canLogin: {
 			type: Boolean,
-			default: false,
+			default: true,
 		},
 		promptLeft: {
 			type: Number,
