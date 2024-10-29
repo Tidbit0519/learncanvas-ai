@@ -1,51 +1,27 @@
-const feedback = async (openai, prompt, assistant, res) => {
-	const thread = await openai.beta.threads.create();
-	const message = await openai.beta.threads.messages.create(thread.id, {
-		role: "user",
-		content: prompt,
+import Groq from "groq-sdk";
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+const feedback = async(input) =>{
+	const chatCompletion = await getGroqChatCompletion(input);
+	return chatCompletion.choices[0]?.message?.content || "";
+}
+
+async function getGroqChatCompletion(input) {
+	return groq.chat.completions.create({
+		messages: [
+			{
+				role: "system",
+				content:
+					"You will be a helpful tutor who is an expert in guiding students based on the assignment descriptions and rubrics. Using simple language, provide feedback and/or suggestions based on the assignment descriptions and/or rubrics given in the prompt. If appropriate, give an example about a different but similar subject. Format and organize your response nicely, and add a new line after each section.",
+			},
+			{
+				role: "user",
+				content: input,
+			},
+		],
+		model: "llama3-8b-8192",
 	});
-
-	// Without streaming
-	// let run = await openai.beta.threads.runs.createAndPoll(thread.id, {
-	// 	assistant_id: assistant.id,
-	// });
-
-	// if (run.status === "completed") {
-	// 	const messages = await openai.beta.threads.messages.list(run.thread_id);
-	// 	return messages.data[0].content[0].text.value;
-	// } else {
-	// 	console.log(run.status);
-	// }
-
-	// With streaming
-	const run = openai.beta.threads.runs
-		.stream(thread.id, {
-			assistant_id: assistant.id,
-		})
-        .on("textDelta", (textDelta, snapshot) => {
-			res.write(textDelta.value);
-		})
-		// .on("toolCallDelta", (toolCallDelta, snapshot) => {
-		// 	if (toolCallDelta.type === "code_interpreter") {
-		// 		if (toolCallDelta.code_interpreter.input) {
-		// 			res.write(toolCallDelta.code_interpreter.input);
-		// 		}
-		// 		if (toolCallDelta.code_interpreter.outputs) {
-		// 			res.write("\noutput >\n");
-		// 			toolCallDelta.code_interpreter.outputs.forEach((output) => {
-		// 				if (output.type === "logs") {
-		// 					res.write(`\n${output.logs}\n`);
-		// 				}
-		// 			});
-		// 		}
-		// 	}
-		// })
-		.on("end", () => {
-			res.end();
-		})
-		.on("error", (error) => {
-			res.status(500).send("Internal server error");
-		});
-};
+}
 
 export default feedback;
