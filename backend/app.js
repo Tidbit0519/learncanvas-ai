@@ -11,7 +11,6 @@ import errorHandler from "./middleware/errorMiddleware.js";
 import {
 	authRouter,
 	canvasRouter,
-	submissionRouter,
 	userRouter,
 	feedbackRouter,
 } from "./routes/index.js";
@@ -36,12 +35,12 @@ cron.schedule("0 0 * * *", async () => {
 	}
 });
 
-app.use(cors(
-	{
+app.use(
+	cors({
 		origin: process.env.CORS_ORIGIN,
 		credentials: true,
-	}
-));
+	})
+);
 app.use(cookieParser());
 
 app.use(bodyParser.text({ type: "text/plain" }));
@@ -61,11 +60,6 @@ app.use(
 	"/api/canvas",
 	passport.authenticate("jwt", { session: false }),
 	canvasRouter
-);
-app.use(
-	"/api/submissions",
-	passport.authenticate("jwt", { session: false }),
-	submissionRouter
 );
 app.use(
 	"/api/users",

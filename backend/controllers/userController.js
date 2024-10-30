@@ -1,4 +1,4 @@
-import { User, Submission } from "../model/index.js";
+import { User } from "../model/index.js";
 
 const getAllUsers = async (req, res) => {
 	try {
@@ -109,8 +109,6 @@ const deleteUserById = async (req, res) => {
 		if (!user) {
 			return res.status(404).send("User not found");
 		}
-
-		await Submission.deleteMany({ user: req.params.id });
 		res.status(200).send("User deleted");
 	} catch (error) {
 		console.error("Error deleting user:", error);

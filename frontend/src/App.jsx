@@ -3,8 +3,6 @@ import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
-import Submissions from "./pages/Submissions";
-import SubmissionById from "./pages/SubmissionById";
 import Assignments from "./pages/Assignments";
 import Feedback from "./pages/Feedback";
 import Profile from "./pages/Profile";
@@ -33,14 +31,6 @@ function App() {
 						<Route
 							index
 							element={<Home />}
-						/>
-						<Route
-							path="submissions"
-							element={<Submissions />}
-						/>
-						<Route
-							path="submissions/:submissionId"
-							element={<SubmissionById />}
 						/>
 						<Route
 							path="courses/:courseId/assignments"
