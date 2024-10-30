@@ -6,6 +6,7 @@ import {
 	ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 import NavIcon from "../assets/icon-128.png";
+import GroqLogo from "../assets/groq-logo-white.png";
 import useAuth from "../hooks/useAuth";
 
 const Layout = () => {
@@ -13,7 +14,7 @@ const Layout = () => {
 	const navigate = useNavigate();
 
 	return (
-		<>
+		<div className="flex flex-col max-h-screen">
 			<header className="bg-slate-800">
 				<nav className="flex items-center justify-between px-4 lg:px-8 py-2">
 					<div className="flex lg:flex-1 items-center">
@@ -29,10 +30,18 @@ const Layout = () => {
 						</a>
 						<a
 							href="/"
-							className="sm:hidden lg:block lg:text-md font-bold text-slate-100 uppercase tracking-wider"
+							className="hidden lg:block lg:text-md font-bold text-slate-100 uppercase tracking-wider mr-8"
 						>
 							LearnCanvas AI
 						</a>
+					</div>
+					<div className="flex items-center justify-center gap-4">
+						<div className="text-slate-100 text-md">Powered by</div>
+						<img
+							className="h-8 w-auto"
+							src={GroqLogo}
+							alt=""
+						/>
 					</div>
 					<div className="flex flex-1 justify-end">
 						<Menu>
@@ -75,7 +84,7 @@ const Layout = () => {
 			<div className="max-w-screen-lg mx-auto">
 				<Outlet />
 			</div>
-		</>
+		</div>
 	);
 };
 
