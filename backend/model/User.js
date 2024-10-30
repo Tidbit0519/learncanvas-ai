@@ -28,12 +28,6 @@ const User = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		submissions: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Submission",
-			},
-		],
 		tokenId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Token",
@@ -45,10 +39,6 @@ const User = mongoose.Schema(
 		canLogin: {
 			type: Boolean,
 			default: true,
-		},
-		promptLeft: {
-			type: Number,
-			default: 10,
 		},
 	},
 	{
@@ -81,9 +71,5 @@ User.methods.isAdmin = function () {
 User.methods.idCheck = function (req) {
 	return this._id.toString() === req.params.id.toString();
 };
-
-User.methods.checkPromptLeft = function () {
-	return this.promptLeft > 0;
-};	
 
 export default mongoose.model("User", User);
