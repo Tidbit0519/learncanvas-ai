@@ -173,7 +173,7 @@ const EditableField = ({
 	register,
 	type = "text",
 }) => (
-	<div className="flex flex-col gap-2 w-1/2">
+	<div className="flex flex-col gap-2 min-w-[300px]">
 		<div className="font-semibold">{label}:</div>
 		{editMode ? (
 			<input
@@ -183,7 +183,7 @@ const EditableField = ({
 				className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100 w-[300px]"
 			/>
 		) : (
-			<div className="text-slate-400 flex items-center">
+			<div className="text-slate-400 flex items-center py-2">
 				{defaultValue}
 			</div>
 		)}
