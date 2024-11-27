@@ -8,6 +8,8 @@ import { useDispatch, connect } from "react-redux";
 import { registerCredentials } from "../features/auth/authSlice";
 import { useSignupMutation } from "../features/auth/authApiSlice";
 
+import GroqLogo from "../assets/groq-logo-white.png";
+
 const Signup = () => {
 	const [showMessage, setShowMessage] = useState(false);
 	const handleTokenInput = () => {
@@ -237,11 +239,12 @@ const Signup = () => {
 						name="canvasToken"
 						className="mt-1 block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-100"
 						{...register("canvasToken", { required: true })}
-							onFocus={handleTokenInput}
+						onFocus={handleTokenInput}
 					/>
 					{showMessage && (
 						<div className="italic text-slate-400 text-sm">
-							Your token is set to expire in 7 days. Please regenerate a new token to continue using the
+							Your token is set to expire in 7 days. Please
+							regenerate a new token to continue using the
 							application after it expires.
 						</div>
 					)}
@@ -262,6 +265,14 @@ const Signup = () => {
 					>
 						Log in
 					</a>
+				</div>
+				<div className="pt-8 flex items-center justify-center gap-4">
+					<div className="text-slate-400 text-sm">Powered by</div>
+					<img
+						className="h-8 w-auto"
+						src={GroqLogo}
+						alt=""
+					/>
 				</div>
 			</div>
 		</div>

@@ -5,6 +5,8 @@ import { setCredentials } from "../features/auth/authSlice";
 import { useLoginMutation } from "../features/auth/authApiSlice";
 import usePersist from "../hooks/usePersist";
 
+import GroqLogo from "../assets/groq-logo-white.png";
+
 const Login = () => {
 	const emailRef = useRef(null);
 	const pwdRef = useRef(null);
@@ -132,6 +134,14 @@ const Login = () => {
 						</a>
 					</p>
 				</div>
+			<div className="pt-8 flex items-center justify-center gap-4">
+				<div className="text-slate-400 text-sm">Powered by</div>
+				<img
+					className="h-8 w-auto"
+					src={GroqLogo}
+					alt=""
+				/>
+			</div>
 			</div>
 		</div>
 	);
