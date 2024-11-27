@@ -5,10 +5,6 @@ import { User } from "../model/index.js";
 
 const handleFeedback = async (req, res) => {
 	const currentUser = await User.findById(req.user._id);
-	
-	if (!currentUser.checkPromptLeft()) {
-		return res.status(403).send("You have reached your daily limit of prompts");
-	}
 
 	try {
 		if (req.query || req.body) {
