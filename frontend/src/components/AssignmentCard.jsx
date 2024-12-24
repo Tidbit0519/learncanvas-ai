@@ -6,9 +6,7 @@ const AssignmentCard = ({ assignment }) => {
 
 	return (
 		<>
-			<h2 className={`${styles.sectionSubText}`}>
-				Assignment Description
-			</h2>
+			<h2 className={`${styles.sectionSubText}`}>Assignment Description</h2>
 			<div className="text-slate-200">
 				<p className="text-lg font-semibold pb-4">{assignment.name}</p>
 				<div
