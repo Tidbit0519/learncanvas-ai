@@ -34,14 +34,10 @@ const Feedback = () => {
 				<ExclamationCircleIcon className="h-20 w-20 lg:h-5 lg:w-5" />
 				<p>
 					Please note that we only support assignments that are {""}
-					<span className="font-bold underline">
-						online text entry
-					</span>
+					<span className="font-bold underline">online text entry</span>
 					{""} and {""}
-					<span className="font-bold underline">
-						online upload (.docx)
-					</span>{" "}
-					for now.
+					<span className="font-bold underline">online upload (.docx)</span> for
+					now.
 				</p>
 			</div>
 			<div className="flex flex-col lg:flex-row gap-4 bg-slate-900 p-6 rounded-2xl h-full w-full">
@@ -53,9 +49,9 @@ const Feedback = () => {
 				<div className="w-full overflow-y-auto max-h-[80vh]">
 					{assignment && <AssignmentCard assignment={assignment} />}
 				</div>
-				<div className="pt-2 border-t-2" />
+				<div className="pt-2 border-t-2 lg:border-l-2" />
 				<div className="w-full overflow-y-auto max-h-[80vh]">
-					{submission && (
+					{assignment && (
 						<FeedbackCard
 							assignment={assignment}
 							submission={submission}

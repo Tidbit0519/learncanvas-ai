@@ -12,10 +12,13 @@ const FeedbackCard = ({ assignment, submission }) => {
 		"Assignment description: " +
 		description +
 		"\n" +
-		"My submission: " +
-		submission?.body;
+		(submission && "My submission: " + submission.body);
 
 	const checkSubmissionType = () => {
+		if (!submission) {
+			return true;
+		}
+
 		if (
 			submission.submission_type === "online_text_entry" ||
 			submission.attachments?.[0]?.filename.endsWith(".docx")
@@ -28,17 +31,22 @@ const FeedbackCard = ({ assignment, submission }) => {
 
 	const handleFeedback = async () => {
 		setFeedback("");
-		getFeedback(submission.attachments?.[0]?.url, prompt);
+		getFeedback(submission?.attachments?.[0]?.url, prompt);
 	};
 
 	useEffect(() => {
-		if (submission && checkSubmissionType()) {
+		if (checkSubmissionType()) {
 			handleFeedback();
 		}
 	}, [submission]);
 
 	return (
 		<>
+			{!submission && (
+				<p className="bg-violet-400 text-slate-100 rounded-md p-2 text-md text-center">
+					No submission found.
+				</p>
+			)}
 			{submission && (
 				<p className="text-green-500 bg-green-200 rounded-md p-2 text-md text-center">
 					{submission.submission_type === "online_text_entry" ||

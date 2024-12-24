@@ -1,21 +1,15 @@
 import axios from "axios";
 import mammoth from "mammoth";
 import feedback from "../assistant.js";
-import { User } from "../model/index.js";
 
 const handleFeedback = async (req, res) => {
-	const currentUser = await User.findById(req.user._id);
-
 	try {
 		if (req.query || req.body) {
 			let prompt = "";
 			if (req.query.fileUrl) {
-				const response = await axios.get(
-					req.query.fileUrl,
-					{
-						responseType: "arraybuffer",
-					}
-				);
+				const response = await axios.get(req.query.fileUrl, {
+					responseType: "arraybuffer",
+				});
 				const rawText = await mammoth.extractRawText({
 					buffer: Buffer.from(response.data),
 				});
@@ -35,7 +29,9 @@ const handleFeedback = async (req, res) => {
 		}
 	} catch (error) {
 		console.error(error);
-		res.status(500).send("An error has occurred. Please contact the administrator.");
+		res.status(500).send(
+			"An error has occurred. Please contact the administrator."
+		);
 	}
 };
 

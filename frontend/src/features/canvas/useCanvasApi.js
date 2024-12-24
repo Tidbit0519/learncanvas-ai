@@ -31,7 +31,7 @@ const useCanvasApi = () => {
 			setCanvasError(err);
 			console.error(err);
 		}
-	}
+	};
 
 	const getAllActiveCourses = async () => {
 		try {
@@ -93,7 +93,7 @@ const useCanvasApi = () => {
 			setCanvasError(err);
 			console.error(err);
 		}
-	}
+	};
 
 	const getSubmissionById = async (courseId, assignmentId, userId) => {
 		try {
@@ -109,6 +109,7 @@ const useCanvasApi = () => {
 			setSubmission(response.data);
 			setCanvasLoading(false);
 		} catch (err) {
+			setSubmission(null);
 			setCanvasLoading(false);
 			setCanvasError(err);
 			console.error(err);
