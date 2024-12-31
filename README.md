@@ -2,24 +2,21 @@
 
 **LearnCanvas AI** is a full-stack web application that uses Generative AI and the Canvas LMS API to provide personalized tutoring and feedback on student assignments. This project aims to make education more accessible and impactful by combining AI capabilities with Canvas LMS.
 
----
-
 ## **Table of Contents**
 
 1. [Why LearnCanvas AI?](#why-learncanvas-ai)
 2. [Features](#features)
-3. [Demo](#demo)
-4. [Getting Started](#getting-started)
+3. [Limitations](#limitations)
+4. [Demo](#demo)
+5. [Getting Started](#getting-started)
    - [Prerequisites](#prerequisites)
    - [Installation](#installation)
    - [Environment Variables](#environment-variables)
-5. [Technologies Used](#technologies-used)
-6. [Contributing](#contributing)
-7. [License](#license)
-8. [Contact](#contact)
-9. [Future Enhancements](#future-enhancements)
-
----
+6. [Technologies Used](#technologies-used)
+7. [Contributing](#contributing)
+8. [License](#license)
+9. [Contact](#contact)
+10. [Future Enhancements](#future-enhancements)
 
 ## **Why LearnCanvas AI?**
 
@@ -36,7 +33,9 @@ Learning platforms often lack personalized and immediate support for students. L
 - **User-Friendly Dashboard**  
   An intuitive interface for students and educators to manage submissions and access feedback.
 
----
+## **Limitations**
+
+Currently, the application supports processing text entry and DOCX file submissions from Canvas API only. Submissions in other formats, such as PDFs or image-based content, are not yet supported. Expanding compatibility is part of the planned future enhancements.
 
 ## **Demo**
 
@@ -128,8 +127,6 @@ Learning platforms often lack personalized and immediate support for students. L
 - **AI Integration:** Groq API
 - **LMS Integration:** Canvas LMS API
 
----
-
 ## **Contributing**
 
 Contributions are welcome! Follow these steps to get involved:
@@ -149,13 +146,9 @@ Contributions are welcome! Follow these steps to get involved:
    ```
 5. Create a pull request.
 
----
-
 ## **License**
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/Tidbit0519/learncanvas-ai/blob/main/LICENSE) file for details.
-
----
 
 ## **Contact**
 
@@ -163,10 +156,8 @@ For inquiries, feel free to contact:
 **Jason Ban Tze Tan**  
 ✉️ jasonbantze.tan@gmail.com
 
----
-
 ## **Future Enhancements**
 
 - Add reset password feature for users.
 - Add features for educators.
-- Add localization support for non-English users.
+- Expand submission compatibility to include PDFs, image-based content, and other file types.
