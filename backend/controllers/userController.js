@@ -36,14 +36,8 @@ const getUserById = async (req, res) => {
 
 const updateUserById = async (req, res) => {
 	try {
-		const {
-			firstname,
-			lastname,
-			email,
-			role,
-			currentPassword,
-			newPassword,
-		} = req.body;
+		const { firstname, lastname, email, role, currentPassword, newPassword } =
+			req.body;
 
 		const currentUser = await User.findById(req.user._id);
 		// Check if user is admin or user is trying to update their own info
@@ -57,10 +51,7 @@ const updateUserById = async (req, res) => {
 		}
 
 		// If trying to update email or password and not admin
-		if (
-			!currentUser.isAdmin() &&
-			(email || (currentPassword && newPassword))
-		) {
+		if (!currentUser.isAdmin() && (email || (currentPassword && newPassword))) {
 			if (currentPassword) {
 				if (!(await currentUser.comparePassword(currentPassword))) {
 					return res.status(403).send("Invalid password");
@@ -68,9 +59,7 @@ const updateUserById = async (req, res) => {
 			} else {
 				return res
 					.status(403)
-					.send(
-						"Please provide current password to update email or password"
-					);
+					.send("Please provide current password to update email or password");
 			}
 		}
 
@@ -116,12 +105,4 @@ const deleteUserById = async (req, res) => {
 	}
 };
 
-const resetPromptLeft = async () => {
-	try {
-		await User.updateMany({}, { promptLeft: 10 });
-	} catch (error) {
-		console.error("Error resetting prompt left:", error);
-	}
-}
-
-export { getAllUsers, getUserById, updateUserById, deleteUserById, resetPromptLeft };
+export { getAllUsers, getUserById, updateUserById, deleteUserById };
