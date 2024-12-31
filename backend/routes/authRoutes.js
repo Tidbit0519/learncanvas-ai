@@ -73,7 +73,7 @@ authRouter.post("/login", async (req, res) => {
 			};
 
 			const accessToken = jwt.sign(tokenObj, process.env.JWT_SECRET, {
-				expiresIn: "1d",
+				expiresIn: process.env.NODE_ENV === "development" ? "1d" : "15m",
 			}); // change to 15m in production
 
 			const refreshToken = jwt.sign(
